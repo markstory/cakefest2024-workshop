@@ -3,7 +3,11 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
+use Authentication\PasswordHasher\DefaultPasswordHasher;
+use Cake\Core\Configure;
 use Cake\ORM\Entity;
+use DateTime;
+use RuntimeException;
 
 /**
  * User Entity
@@ -22,6 +26,8 @@ use Cake\ORM\Entity;
  */
 class User extends Entity
 {
+    public const PASSWORD_TOKEN_DURATION = '+4 hours';
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -33,14 +39,7 @@ class User extends Entity
      */
     protected array $_accessible = [
         'email' => true,
-        'email_verified' => true,
-        'password' => true,
         'name' => true,
-        'last_active' => true,
-        'created' => true,
-        'updated' => true,
-        'organization_members' => true,
-        'user_emails' => true,
     ];
 
     /**
@@ -50,5 +49,79 @@ class User extends Entity
      */
     protected array $_hidden = [
         'password',
+        'email_verified',
     ];
+
+    protected function _getAvatarHash()
+    {
+        if (!$this->email) {
+            return null;
+        }
+
+        return md5(strtolower($this->email));
+    }
+
+    /**
+     * Hash password
+     *
+     * @param string $password
+     * @return string|null
+     */
+    protected function _setPassword(string $password): ?string
+    {
+        if (mb_strlen($password) > 0) {
+            $hash = $this->passwordHasher()->hash($password);
+
+            return $hash ? $hash : null;
+        }
+
+        return null;
+    }
+
+    public function passwordHasher(): DefaultPasswordHasher
+    {
+        return new DefaultPasswordHasher();
+    }
+
+    /**
+     * Create a password reset token.
+     *
+     * The token will be invalid if:
+     *
+     * - The user changes their email.
+     * - It has been more than 4 hours from creation time.
+     *
+     * @return string
+     */
+    public function passwordResetToken(): string
+    {
+        $emailHash = hash_hmac('sha256', $this->email, Configure::read('Security.emailSalt'));
+        // TODO use an option here.
+        $expires = new DateTime(static::PASSWORD_TOKEN_DURATION);
+        $data = [
+            'uid' => $this->id,
+            'val' => $emailHash,
+            'exp' => $expires->getTimestamp(),
+        ];
+
+        return base64_encode(json_encode($data));
+    }
+
+    public static function decodePasswordResetToken(string $token): object
+    {
+        $decoded = base64_decode($token);
+        if (empty($decoded)) {
+            throw new RuntimeException(__('Invalid password reset token provided.'));
+        }
+        $data = json_decode($decoded);
+        if (!$data || !isset($data->uid, $data->val, $data->exp)) {
+            throw new RuntimeException(__('Invalid password reset token provided.'));
+        }
+        $now = (new DateTime('now'))->getTimestamp();
+        if ($data->exp < $now) {
+            throw new RuntimeException(__('Expired password reset token provided.'));
+        }
+
+        return $data;
+    }
 }
