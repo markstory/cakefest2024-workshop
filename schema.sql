@@ -24,7 +24,7 @@ CREATE TABLE organizations (
     created DATETIME,
     updated DATETIME
 );
-CREATE TABLE organziation_options (
+CREATE TABLE organization_options (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     organization_id INTEGER NOT NULL,
     key VARCHAR NOT NULL,
@@ -102,4 +102,3 @@ CREATE TABLE projects_teams (
     FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE,
     FOREIGN KEY(team_id) REFERENCES teams(id) ON DELETE CASCADE
 );
-
