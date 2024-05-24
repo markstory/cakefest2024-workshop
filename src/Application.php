@@ -138,6 +138,7 @@ class Application extends BaseApplication implements
             'resolver' => [
                 'className' => 'Authentication.Orm',
                 'userModel' => 'Users',
+                'finder' => 'login',
             ],
             'fields' => $fields,
         ]);

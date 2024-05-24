@@ -103,4 +103,9 @@ class UsersTable extends Table
 
         return $rules;
     }
+
+    public function findLogin(SelectQuery $query): SelectQuery
+    {
+        return $query->contain('OrganizationMemberships');
+    }
 }

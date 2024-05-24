@@ -7,6 +7,7 @@ use Authentication\PasswordHasher\DefaultPasswordHasher;
 use Cake\Core\Configure;
 use Cake\ORM\Entity;
 use DateTime;
+use InvalidArgumentException;
 use RuntimeException;
 
 /**
@@ -59,6 +60,23 @@ class User extends Entity
         }
 
         return md5(strtolower($this->email));
+    }
+
+    /**
+     * Get the organization ids that the current user has membership in.
+     *
+     * Relies on data from findLogin()
+     */
+    protected function _getOrganizationMembershipIds(): array
+    {
+        $memberships = $this->organization_members;
+        if (empty($memberships)) {
+            throw new InvalidArgumentException(
+                'Organization memberships not loaded. Use findLogin() to ensure properties are loaded'
+            );
+        }
+
+        return array_map(fn ($item) => $item->id, $memberships);
     }
 
     /**

@@ -17,8 +17,10 @@ class ProjectsController extends AppController
      */
     public function index()
     {
+        // TODO load and display teams intead.
         $query = $this->Projects->find()
             ->contain(['Organizations']);
+        $query = $this->Authorization->applyScope($query);
         $projects = $this->paginate($query);
 
         $this->set(compact('projects'));
@@ -34,6 +36,7 @@ class ProjectsController extends AppController
     public function view($id = null)
     {
         $project = $this->Projects->get($id, contain: ['Organizations', 'Teams']);
+        $this->Authorization->authorize($project);
         $this->set(compact('project'));
     }
 
@@ -47,6 +50,7 @@ class ProjectsController extends AppController
         $project = $this->Projects->newEmptyEntity();
         if ($this->request->is('post')) {
             $project = $this->Projects->patchEntity($project, $this->request->getData());
+            $this->Authorization->authorize($project);
             if ($this->Projects->save($project)) {
                 $this->Flash->success(__('The project has been saved.'));
 
@@ -54,8 +58,10 @@ class ProjectsController extends AppController
             }
             $this->Flash->error(__('The project could not be saved. Please, try again.'));
         }
+        // TODO remove organizations from UI and use URL context
         $organizations = $this->Projects->Organizations->find('list', limit: 200)->all();
         $teams = $this->Projects->Teams->find('list', limit: 200)->all();
+        $teams = $this->Authorization->applyScope($teams, 'index');
         $this->set(compact('project', 'organizations', 'teams'));
     }
 
@@ -71,6 +77,7 @@ class ProjectsController extends AppController
         $project = $this->Projects->get($id, contain: ['Teams']);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $project = $this->Projects->patchEntity($project, $this->request->getData());
+            $this->Authorization->authorize($project);
             if ($this->Projects->save($project)) {
                 $this->Flash->success(__('The project has been saved.'));
 
@@ -78,8 +85,10 @@ class ProjectsController extends AppController
             }
             $this->Flash->error(__('The project could not be saved. Please, try again.'));
         }
+        // TODO remove organizations from UI and use URL context
         $organizations = $this->Projects->Organizations->find('list', limit: 200)->all();
         $teams = $this->Projects->Teams->find('list', limit: 200)->all();
+        $teams = $this->Authorization->applyScope($teams);
         $this->set(compact('project', 'organizations', 'teams'));
     }
 
@@ -94,6 +103,7 @@ class ProjectsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $project = $this->Projects->get($id);
+        $this->Authorization->authorize($project);
         if ($this->Projects->delete($project)) {
             $this->Flash->success(__('The project has been deleted.'));
         } else {

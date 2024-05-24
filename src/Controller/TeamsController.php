@@ -19,6 +19,7 @@ class TeamsController extends AppController
     {
         $query = $this->Teams->find()
             ->contain(['Organizations']);
+        $query = $this->Authorize->applyScope($query);
         $teams = $this->paginate($query);
 
         $this->set(compact('teams'));
@@ -34,6 +35,7 @@ class TeamsController extends AppController
     public function view($id = null)
     {
         $team = $this->Teams->get($id, contain: ['Organizations', 'Projects', 'TeamMembers']);
+        $this->Authorization->authorize($team);
         $this->set(compact('team'));
     }
 
@@ -45,8 +47,10 @@ class TeamsController extends AppController
     public function add()
     {
         $team = $this->Teams->newEmptyEntity();
+
         if ($this->request->is('post')) {
             $team = $this->Teams->patchEntity($team, $this->request->getData());
+            $this->Authorization->authorize($team);
             if ($this->Teams->save($team)) {
                 $this->Flash->success(__('The team has been saved.'));
 
@@ -54,6 +58,7 @@ class TeamsController extends AppController
             }
             $this->Flash->error(__('The team could not be saved. Please, try again.'));
         }
+        // TODO limit to projects in the current org
         $organizations = $this->Teams->Organizations->find('list', limit: 200)->all();
         $projects = $this->Teams->Projects->find('list', limit: 200)->all();
         $this->set(compact('team', 'organizations', 'projects'));
@@ -69,6 +74,7 @@ class TeamsController extends AppController
     public function edit($id = null)
     {
         $team = $this->Teams->get($id, contain: ['Projects']);
+        $this->Authorization->authorize($team);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $team = $this->Teams->patchEntity($team, $this->request->getData());
             if ($this->Teams->save($team)) {
@@ -94,6 +100,7 @@ class TeamsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $team = $this->Teams->get($id);
+        $this->Authorization->authorize($team);
         if ($this->Teams->delete($team)) {
             $this->Flash->success(__('The team has been deleted.'));
         } else {
