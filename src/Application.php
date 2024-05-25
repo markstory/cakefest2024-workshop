@@ -69,6 +69,7 @@ class Application extends BaseApplication implements
         }
         $this->addPlugin('Authentication');
         $this->addPlugin('Authorization');
+        $this->addOptionalPlugin('Cake/Repl');
     }
 
     /**

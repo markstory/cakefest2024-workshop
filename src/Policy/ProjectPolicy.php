@@ -13,7 +13,7 @@ class ProjectPolicy
 {
     protected function isOrgMember(IdentityInterface $user, Project $project): bool
     {
-        return in_array($project->organization_id, $user->organization_membership_ids);
+        return in_array($project->organization_id, $user->member_organization_ids);
     }
 
     /**

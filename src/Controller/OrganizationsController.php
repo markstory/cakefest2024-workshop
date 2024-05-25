@@ -18,6 +18,7 @@ class OrganizationsController extends AppController
     public function index()
     {
         $query = $this->Organizations->find();
+        $query = $this->Authorization->applyScope($query);
         $organizations = $this->paginate($query);
 
         $this->set(compact('organizations'));
@@ -32,7 +33,8 @@ class OrganizationsController extends AppController
      */
     public function view($id = null)
     {
-        $organization = $this->Organizations->get($id, contain: ['OrganizationInvites', 'OrganizationMembers', 'OrganziationOptions', 'Projects', 'Teams']);
+        $organization = $this->Organizations->get($id, contain: ['OrganizationInvites', 'OrganizationMembers', 'OrganizationOptions', 'Projects', 'Teams']);
+        $this->Authorization->authorize($organization);
         $this->set(compact('organization'));
     }
 
@@ -44,9 +46,19 @@ class OrganizationsController extends AppController
     public function add()
     {
         $organization = $this->Organizations->newEmptyEntity();
+        $this->Authorization->authorize($organization);
         if ($this->request->is('post')) {
             $organization = $this->Organizations->patchEntity($organization, $this->request->getData());
-            if ($this->Organizations->save($organization)) {
+            $organization->organization_members = [
+                $this->Organizations->OrganizationMembers->newEntity([
+                        'user_id' => $this->request->getAttribute('identity')->id,
+                        'organiation_id' => $organization->id,
+                        'role' => 'owner',
+                    ],
+                    ['guard' => false],
+                ),
+            ];
+            if ($this->Organizations->save($organization, ['associated' => ['OrganizationMembers']])) {
                 $this->Flash->success(__('The organization has been saved.'));
 
                 return $this->redirect(['action' => 'index']);

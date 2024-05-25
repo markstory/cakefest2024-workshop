@@ -50,6 +50,7 @@ class OrganizationsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Sluggable', ['label' => ['name']]);
 
         $this->hasMany('OrganizationInvites', [
             'foreignKey' => 'organization_id',
@@ -57,7 +58,7 @@ class OrganizationsTable extends Table
         $this->hasMany('OrganizationMembers', [
             'foreignKey' => 'organization_id',
         ]);
-        $this->hasMany('OrganziationOptions', [
+        $this->hasMany('OrganizationOptions', [
             'foreignKey' => 'organization_id',
         ]);
         $this->hasMany('Projects', [
@@ -78,7 +79,6 @@ class OrganizationsTable extends Table
     {
         $validator
             ->scalar('slug')
-            ->requirePresence('slug', 'create')
             ->notEmptyString('slug')
             ->add('slug', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 

@@ -13,6 +13,6 @@ class OrganizationsTablePolicy
 {
     public function scopeIndex(IdentityInterface $user, SelectQuery $query): SelectQuery
     {
-        return $query->where(['Organizations.id IN' => $user->organization_membership_ids]);
+        return $query->where(['Organizations.id IN' => $user->member_organization_ids]);
     }
 }

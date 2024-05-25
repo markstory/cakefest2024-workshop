@@ -67,7 +67,7 @@ class User extends Entity
      *
      * Relies on data from findLogin()
      */
-    protected function _getOrganizationMembershipIds(): array
+    protected function _getMemberOrganizationIds(): array
     {
         $memberships = $this->organization_members;
         if (empty($memberships)) {
@@ -76,7 +76,7 @@ class User extends Entity
             );
         }
 
-        return array_map(fn ($item) => $item->id, $memberships);
+        return array_map(fn ($item) => $item->organization_id, $memberships);
     }
 
     /**

@@ -409,4 +409,12 @@ return [
     'Session' => [
         'defaults' => 'php',
     ],
+
+    'DebugKit' => [
+        'ignoreAuthorization' => true,
+    ],
+
+    'Migrations' => [
+        'backend' => 'builtin',
+    ],
 ];

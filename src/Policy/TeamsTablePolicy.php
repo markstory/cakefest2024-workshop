@@ -13,6 +13,6 @@ class TeamsTablePolicy
 {
     public function scopeIndex(IdentityInterface $user, SelectQuery $query): SelectQuery
     {
-        return $query->where(['Teams.organnization_id IN' => $user->organization_membership_ids]);
+        return $query->where(['Teams.organnization_id IN' => $user->member_organization_ids]);
     }
 }

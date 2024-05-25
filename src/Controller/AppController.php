@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Controller;
 
+use App\Model\Entity\Organization;
 use Cake\Controller\Controller;
 
 /**
@@ -50,7 +51,16 @@ class AppController extends Controller
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
          */
         //$this->loadComponent('FormProtection');
-        $this->loadComponent('Authorization');
-        $this->loadComponent('Authentication');
+        $this->loadComponent('Authorization.Authorization');
+        $this->loadComponent('Authentication.Authentication');
+    }
+
+    protected function getOrganization(): Organization
+    {
+        $organizations = $this->fetchTable('Organizations');
+        $organization = $organizations->findBySlug($this->request->getParam('orgslug'))->firstOrFail();
+        $this->Authorization->authorize($organization);
+
+        return $organization;
     }
 }

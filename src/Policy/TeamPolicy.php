@@ -13,7 +13,7 @@ class TeamPolicy
 {
     protected function isOrgMember(IdentityInterface $user, Team $team): bool
     {
-        return in_array($team->organization_id, $user->organization_membership_ids);
+        return in_array($team->organization_id, $user->member_organization_ids);
     }
 
     /**

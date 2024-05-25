@@ -44,7 +44,11 @@ class OrganizationInvitesController extends AppController
      */
     public function add()
     {
+        $organization = $this->getOrganization();
         $organizationInvite = $this->OrganizationInvites->newEmptyEntity();
+        $organizationInvite->organization_id = $organization->id;
+        $this->Authorization->authorize($organizationInvite);
+
         if ($this->request->is('post')) {
             $organizationInvite = $this->OrganizationInvites->patchEntity($organizationInvite, $this->request->getData());
             if ($this->OrganizationInvites->save($organizationInvite)) {

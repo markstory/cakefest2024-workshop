@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Event\EventInterface;
+
 /**
  * Users Controller
  *
@@ -10,6 +12,15 @@ namespace App\Controller;
  */
 class UsersController extends AppController
 {
+    public function beforeFilter(EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+
+        $this->Authentication->allowUnauthenticated([
+            'add', 'login', 'resetPassword', 'newPassword',
+        ]);
+    }
+
     /**
      * View method
      *
@@ -20,6 +31,7 @@ class UsersController extends AppController
     public function view($id = null)
     {
         $user = $this->Users->get($id, contain: ['OrganizationMembers', 'UserEmails']);
+        $this->Authorization->authorize($user);
         $this->set(compact('user'));
     }
 
