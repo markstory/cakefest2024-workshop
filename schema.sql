@@ -6,8 +6,10 @@ CREATE TABLE users (
     name VARCHAR,
     last_active DATETIME,
     created DATETIME,
-    updated DATETIME
+    updated DATETIME,
+    UNIQUE(email)
 );
+-- Could add multiple email support later.
 CREATE TABLE user_emails (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -15,14 +17,16 @@ CREATE TABLE user_emails (
     email_verified BOOLEAN NOT NULL DEFAULT false,
     created DATETIME,
     updated DATETIME,
-    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(email)
 );
 CREATE TABLE organizations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     slug VARCHAR NOT NULL UNIQUE,
     name VARCHAR,
     created DATETIME,
-    updated DATETIME
+    updated DATETIME,
+    UNIQUE(slug)
 );
 CREATE TABLE organization_options (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,7 +47,8 @@ CREATE TABLE organization_members (
     created DATETIME,
     modified DATETIME,
     FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY(organization_id) REFERENCES organizations(id) ON DELETE CASCADE
+    FOREIGN KEY(organization_id) REFERENCES organizations(id) ON DELETE CASCADE,
+    UNIQUE(organization_id, user_id)
 );
 CREATE TABLE organization_invites (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
