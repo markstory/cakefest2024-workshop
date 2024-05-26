@@ -86,6 +86,11 @@ class OrganizationInvitesTable extends Table
             ->integer('organization_member_id')
             ->allowEmptyString('organization_member_id');
 
+        $validator
+            ->scalar('verify_token')
+            ->requirePresence('verify_token', 'create')
+            ->notEmptyString('verify_token');
+
         return $validator;
     }
 

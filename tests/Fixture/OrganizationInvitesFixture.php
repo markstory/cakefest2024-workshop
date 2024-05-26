@@ -25,8 +25,9 @@ class OrganizationInvitesFixture extends TestFixture
                 'role' => 'Lorem ipsum dolor sit amet',
                 'teams' => 'Lorem ipsum dolor sit amet',
                 'organization_member_id' => 1,
-                'created' => '2024-05-19 03:42:23',
-                'modified' => '2024-05-19 03:42:23',
+                'created' => '2024-05-26 15:04:33',
+                'modified' => '2024-05-26 15:04:33',
+                'verify_token' => 'Lorem ipsum dolor sit amet',
             ],
         ];
         parent::init();

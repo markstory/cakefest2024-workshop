@@ -16,6 +16,7 @@ use Cake\ORM\Entity;
  * @property int|null $organization_member_id
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
+ * @property string $verify_token
  *
  * @property \App\Model\Entity\Organization $organization
  * @property \App\Model\Entity\OrganizationMember $organization_member
@@ -39,6 +40,7 @@ class OrganizationInvite extends Entity
         'organization_member_id' => true,
         'created' => true,
         'modified' => true,
+        'verify_token' => true,
         'organization' => true,
         'organization_member' => true,
     ];
