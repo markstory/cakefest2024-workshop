@@ -58,4 +58,16 @@ class OrganizationInvitePolicy
     {
         return in_array($organizationInvite->organization_id, $user->member_organization_ids, true);
     }
+
+    /**
+     * Check if $user can add OrganizationInvite
+     *
+     * @param \Authorization\IdentityInterface $user The user.
+     * @param \App\Model\Entity\OrganizationInvite $organizationInvite
+     * @return bool
+     */
+    public function canAccept(IdentityInterface $user, OrganizationInvite $organizationInvite)
+    {
+        return $user->email == $organizationInvite->email;
+    }
 }
