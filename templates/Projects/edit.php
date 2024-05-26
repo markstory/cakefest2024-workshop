@@ -24,8 +24,6 @@
             <fieldset>
                 <legend><?= __('Edit Project') ?></legend>
                 <?php
-                    echo $this->Form->control('organization_id', ['options' => $organizations]);
-                    echo $this->Form->control('slug');
                     echo $this->Form->control('name');
                     echo $this->Form->control('teams._ids', ['options' => $teams]);
                 ?>

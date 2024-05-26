@@ -11,17 +11,14 @@
             <?= $this->Html->link(__('Edit Organization'), ['action' => 'edit', $organization->id], ['class' => 'side-nav-item']) ?>
             <?= $this->Form->postLink(__('Delete Organization'), ['action' => 'delete', $organization->id], ['confirm' => __('Are you sure you want to delete # {0}?', $organization->id), 'class' => 'side-nav-item']) ?>
             <?= $this->Html->link(__('List Organizations'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('New Organization'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
+            <?= $this->Html->link(__('New Team'), ['controller' => 'Teams', 'action' => 'add'], ['class' => 'side-nav-item']) ?>
+            <?= $this->Html->link(__('New Project'), ['controller' => 'Projects', 'action' => 'add'], ['class' => 'side-nav-item']) ?>
         </div>
     </aside>
     <div class="column column-80">
         <div class="organizations view content">
             <h3><?= h($organization->name) ?></h3>
             <table>
-                <tr>
-                    <th><?= __('Slug') ?></th>
-                    <td><?= h($organization->slug) ?></td>
-                </tr>
                 <tr>
                     <th><?= __('Name') ?></th>
                     <td><?= h($organization->name) ?></td>
@@ -100,7 +97,6 @@
                 <div class="table-responsive">
                     <table>
                         <tr>
-                            <th><?= __('Slug') ?></th>
                             <th><?= __('Name') ?></th>
                             <th><?= __('Created') ?></th>
                             <th><?= __('Modified') ?></th>
@@ -108,7 +104,6 @@
                         </tr>
                         <?php foreach ($organization->projects as $project) : ?>
                         <tr>
-                            <td><?= h($project->slug) ?></td>
                             <td><?= h($project->name) ?></td>
                             <td><?= h($project->created) ?></td>
                             <td><?= h($project->modified) ?></td>
@@ -131,7 +126,6 @@
                 <div class="table-responsive">
                     <table>
                         <tr>
-                            <th><?= __('Slug') ?></th>
                             <th><?= __('Name') ?></th>
                             <th><?= __('Created') ?></th>
                             <th><?= __('Modified') ?></th>
@@ -139,7 +133,6 @@
                         </tr>
                         <?php foreach ($organization->teams as $team) : ?>
                         <tr>
-                            <td><?= h($team->slug) ?></td>
                             <td><?= h($team->name) ?></td>
                             <td><?= h($team->created) ?></td>
                             <td><?= h($team->modified) ?></td>

@@ -30,7 +30,7 @@ class UsersController extends AppController
      */
     public function view($id = null)
     {
-        $user = $this->Users->get($id, contain: ['OrganizationMembers', 'UserEmails']);
+        $user = $this->Users->get($id, contain: ['OrganizationMembers.Organizations', 'UserEmails']);
         $this->Authorization->authorize($user);
         $this->set(compact('user'));
     }

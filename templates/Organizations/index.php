@@ -11,7 +11,6 @@
         <table>
             <thead>
                 <tr>
-                    <th><?= $this->Paginator->sort('slug') ?></th>
                     <th><?= $this->Paginator->sort('name') ?></th>
                     <th><?= $this->Paginator->sort('created') ?></th>
                     <th><?= $this->Paginator->sort('updated') ?></th>
@@ -21,7 +20,6 @@
             <tbody>
                 <?php foreach ($organizations as $organization): ?>
                 <tr>
-                    <td><?= h($organization->slug) ?></td>
                     <td><?= h($organization->name) ?></td>
                     <td><?= h($organization->created) ?></td>
                     <td><?= h($organization->updated) ?></td>

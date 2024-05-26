@@ -9,6 +9,7 @@
         <div class="side-nav">
             <h4 class="heading"><?= __('Actions') ?></h4>
             <?= $this->Html->link(__('Edit User'), ['action' => 'edit', $user->id], ['class' => 'side-nav-item']) ?>
+            <?= $this->Html->link(__('Organizations'), ['controller' => 'Organizations', 'action' => 'index'], ['class' => 'side-nav-item']) ?>
             <?= $this->Html->link(__('Create Organization'), ['controller' => 'Organizations', 'action' => 'add'], ['class' => 'side-nav-item']) ?>
         </div>
     </aside>
@@ -38,12 +39,12 @@
                 </tr>
             </table>
             <div class="related">
-                <h4><?= __('Related Organization Members') ?></h4>
+                <h4><?= __('Organization Memberships') ?></h4>
                 <?php if (!empty($user->organization_members)) : ?>
                 <div class="table-responsive">
                     <table>
                         <tr>
-                            <th><?= __('Organization Id') ?></th>
+                            <th><?= __('Organization') ?></th>
                             <th><?= __('Role') ?></th>
                             <th><?= __('Created') ?></th>
                             <th><?= __('Modified') ?></th>
@@ -51,7 +52,7 @@
                         </tr>
                         <?php foreach ($user->organization_members as $organizationMember) : ?>
                         <tr>
-                            <td><?= h($organizationMember->organization_id) ?></td>
+                            <td><?= h($organizationMember->organization?->name) ?></td>
                             <td><?= h($organizationMember->role) ?></td>
                             <td><?= h($organizationMember->created) ?></td>
                             <td><?= h($organizationMember->modified) ?></td>
