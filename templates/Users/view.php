@@ -9,9 +9,7 @@
         <div class="side-nav">
             <h4 class="heading"><?= __('Actions') ?></h4>
             <?= $this->Html->link(__('Edit User'), ['action' => 'edit', $user->id], ['class' => 'side-nav-item']) ?>
-            <?= $this->Form->postLink(__('Delete User'), ['action' => 'delete', $user->id], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id), 'class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('New User'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
+            <?= $this->Html->link(__('Create Organization'), ['controller' => 'Organizations', 'action' => 'add'], ['class' => 'side-nav-item']) ?>
         </div>
     </aside>
     <div class="column column-80">
@@ -25,10 +23,6 @@
                 <tr>
                     <th><?= __('Name') ?></th>
                     <td><?= h($user->name) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Id') ?></th>
-                    <td><?= $this->Number->format($user->id) ?></td>
                 </tr>
                 <tr>
                     <th><?= __('Last Active') ?></th>
@@ -49,9 +43,7 @@
                 <div class="table-responsive">
                     <table>
                         <tr>
-                            <th><?= __('Id') ?></th>
                             <th><?= __('Organization Id') ?></th>
-                            <th><?= __('User Id') ?></th>
                             <th><?= __('Role') ?></th>
                             <th><?= __('Created') ?></th>
                             <th><?= __('Modified') ?></th>
@@ -59,9 +51,7 @@
                         </tr>
                         <?php foreach ($user->organization_members as $organizationMember) : ?>
                         <tr>
-                            <td><?= h($organizationMember->id) ?></td>
                             <td><?= h($organizationMember->organization_id) ?></td>
-                            <td><?= h($organizationMember->user_id) ?></td>
                             <td><?= h($organizationMember->role) ?></td>
                             <td><?= h($organizationMember->created) ?></td>
                             <td><?= h($organizationMember->modified) ?></td>
@@ -82,8 +72,6 @@
                 <div class="table-responsive">
                     <table>
                         <tr>
-                            <th><?= __('Id') ?></th>
-                            <th><?= __('User Id') ?></th>
                             <th><?= __('Email') ?></th>
                             <th><?= __('Email Verified') ?></th>
                             <th><?= __('Created') ?></th>
@@ -92,8 +80,6 @@
                         </tr>
                         <?php foreach ($user->user_emails as $userEmail) : ?>
                         <tr>
-                            <td><?= h($userEmail->id) ?></td>
-                            <td><?= h($userEmail->user_id) ?></td>
                             <td><?= h($userEmail->email) ?></td>
                             <td><?= h($userEmail->email_verified) ?></td>
                             <td><?= h($userEmail->created) ?></td>
