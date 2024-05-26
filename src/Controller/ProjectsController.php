@@ -60,7 +60,7 @@ class ProjectsController extends AppController
         }
         // TODO remove organizations from UI and use URL context
         $organizations = $this->Projects->Organizations->find('list', limit: 200)->all();
-        $teams = $this->Projects->Teams->find('list', limit: 200)->all();
+        $teams = $this->Projects->Teams->find('list', limit: 200);
         $teams = $this->Authorization->applyScope($teams, 'index');
         $this->set(compact('project', 'organizations', 'teams'));
     }
@@ -87,8 +87,8 @@ class ProjectsController extends AppController
         }
         // TODO remove organizations from UI and use URL context
         $organizations = $this->Projects->Organizations->find('list', limit: 200)->all();
-        $teams = $this->Projects->Teams->find('list', limit: 200)->all();
-        $teams = $this->Authorization->applyScope($teams);
+        $teams = $this->Projects->Teams->find('list', limit: 200);
+        $teams = $this->Authorization->applyScope($teams, 'index');
         $this->set(compact('project', 'organizations', 'teams'));
     }
 

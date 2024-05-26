@@ -19,7 +19,7 @@ class TeamsController extends AppController
     {
         $query = $this->Teams->find()
             ->contain(['Organizations']);
-        $query = $this->Authorize->applyScope($query);
+        $query = $this->Authorization->applyScope($query);
         $teams = $this->paginate($query);
 
         $this->set(compact('teams'));
@@ -60,7 +60,8 @@ class TeamsController extends AppController
         }
         // TODO limit to projects in the current org
         $organizations = $this->Teams->Organizations->find('list', limit: 200)->all();
-        $projects = $this->Teams->Projects->find('list', limit: 200)->all();
+        $projects = $this->Teams->Projects->find('list', limit: 200);
+        $projects = $this->Authorization->applyScope($projects, 'index');
         $this->set(compact('team', 'organizations', 'projects'));
     }
 

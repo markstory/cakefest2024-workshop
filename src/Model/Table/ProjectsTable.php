@@ -47,6 +47,7 @@ class ProjectsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Sluggable', ['label' => ['name']]);
 
         $this->belongsTo('Organizations', [
             'foreignKey' => 'organization_id',
