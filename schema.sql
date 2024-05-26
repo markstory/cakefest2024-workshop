@@ -55,6 +55,7 @@ CREATE TABLE organization_invites (
     organization_id INTEGER NOT NULL,
     email VARCHAR NOT NULL,
     role VARCHAR NOT NULL DEFAULT 'member',
+    verify_token VARCHAR NOT NULL,
     teams VARCHAR,
     organization_member_id INTEGER,
     created DATETIME,
