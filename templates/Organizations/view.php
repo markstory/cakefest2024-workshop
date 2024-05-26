@@ -51,7 +51,6 @@
                             <td><?= h($organizationInvite->created) ?></td>
                             <td><?= h($organizationInvite->modified) ?></td>
                             <td class="actions">
-                                <?= $this->Html->link(__('View'), ['controller' => 'OrganizationInvites', 'action' => 'view', $organizationInvite->id]) ?>
                                 <?= $this->Html->link(__('Edit'), ['controller' => 'OrganizationInvites', 'action' => 'edit', $organizationInvite->id]) ?>
                                 <?= $this->Form->postLink(__('Delete'), ['controller' => 'OrganizationInvites', 'action' => 'delete', $organizationInvite->id], ['confirm' => __('Are you sure you want to delete # {0}?', $organizationInvite->id)]) ?>
                             </td>
@@ -69,6 +68,7 @@
                 <div class="table-responsive">
                     <table>
                         <tr>
+                            <th><?= __('Name') ?></th>
                             <th><?= __('Role') ?></th>
                             <th><?= __('Created') ?></th>
                             <th><?= __('Modified') ?></th>
@@ -76,6 +76,7 @@
                         </tr>
                         <?php foreach ($organization->organization_members as $organizationMember) : ?>
                         <tr>
+                            <td><?= h($organizationMember->user?->name) ?></td>
                             <td><?= h($organizationMember->role->value) ?></td>
                             <td><?= h($organizationMember->created) ?></td>
                             <td><?= h($organizationMember->modified) ?></td>

@@ -78,6 +78,7 @@ class OrganizationInvitesTable extends Table
             ->requirePresence('email', 'create')
             ->notEmptyString('email');
 
+        // TODO use an enum instead.
         $validator
             ->enum('role', MemberRoleEnum::class);
 

@@ -22,8 +22,6 @@
                     echo $this->Form->control('organization_id', ['options' => $organizations]);
                     echo $this->Form->control('email');
                     echo $this->Form->control('role');
-                    echo $this->Form->control('teams');
-                    echo $this->Form->control('organization_member_id', ['options' => $organizationMembers, 'empty' => true]);
                 ?>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>

@@ -33,7 +33,7 @@ class OrganizationsController extends AppController
      */
     public function view($id = null)
     {
-        $organization = $this->Organizations->get($id, contain: ['OrganizationInvites', 'OrganizationMembers', 'OrganizationOptions', 'Projects', 'Teams']);
+        $organization = $this->Organizations->get($id, contain: ['OrganizationInvites', 'OrganizationMembers.Users', 'OrganizationOptions', 'Projects', 'Teams']);
         $this->Authorization->authorize($organization);
         $this->set(compact('organization'));
     }
