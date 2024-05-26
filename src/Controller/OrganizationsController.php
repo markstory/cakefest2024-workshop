@@ -78,6 +78,7 @@ class OrganizationsController extends AppController
     public function edit($id = null)
     {
         $organization = $this->Organizations->get($id, contain: []);
+        $this->Authorization->authorize($organization);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $organization = $this->Organizations->patchEntity($organization, $this->request->getData());
             if ($this->Organizations->save($organization)) {
@@ -101,6 +102,7 @@ class OrganizationsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $organization = $this->Organizations->get($id);
+        $this->Authorization->authorize($organization);
         if ($this->Organizations->delete($organization)) {
             $this->Flash->success(__('The organization has been deleted.'));
         } else {
