@@ -17,6 +17,7 @@
             <fieldset>
                 <legend><?= __('Add Organization') ?></legend>
                 <?php
+                    echo $this->Form->control('slug');
                     echo $this->Form->control('name');
                 ?>
             </fieldset>
