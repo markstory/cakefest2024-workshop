@@ -58,8 +58,8 @@ class TeamsController extends AppController
             }
             $this->Flash->error(__('The team could not be saved. Please, try again.'));
         }
-        // TODO limit to projects in the current org
-        $organizations = $this->Teams->Organizations->find('list', limit: 200)->all();
+        $organizations = $this->Teams->Organizations->find('list', limit: 200);
+        $organizations = $this->Authorization->applyScope($organizations, 'index');
         $projects = $this->Teams->Projects->find('list', limit: 200);
         $projects = $this->Authorization->applyScope($projects, 'index');
         $this->set(compact('team', 'organizations', 'projects'));

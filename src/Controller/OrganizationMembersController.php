@@ -58,8 +58,9 @@ class OrganizationMembersController extends AppController
             $this->Flash->error(__('The organization member could not be saved. Please, try again.'));
         }
         // TODO remove users and limit organization based on current membership
-        $organizations = $this->OrganizationMembers->Organizations->find('list', limit: 200)->all();
         // TODO remove this, and use invitation links inteas
+        $organizations = $this->OrganizationMembers->Organizations->find('list', limit: 200);
+        $organizations = $this->Authorization->applyScope($organizations, 'index');
         $users = $this->OrganizationMembers->Users->find('list', limit: 200)->all();
         $this->set(compact('organizationMember', 'organizations', 'users'));
     }
@@ -84,7 +85,8 @@ class OrganizationMembersController extends AppController
             }
             $this->Flash->error(__('The organization member could not be saved. Please, try again.'));
         }
-        $organizations = $this->OrganizationMembers->Organizations->find('list', limit: 200)->all();
+        $organizations = $this->OrganizationMembers->Organizations->find('list', limit: 200);
+        $organizations = $this->Authorization->applyScope($organizations, 'index');
         $users = $this->OrganizationMembers->Users->find('list', limit: 200)->all();
         $this->set(compact('organizationMember', 'organizations', 'users'));
     }

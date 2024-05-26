@@ -58,8 +58,8 @@ class ProjectsController extends AppController
             }
             $this->Flash->error(__('The project could not be saved. Please, try again.'));
         }
-        // TODO remove organizations from UI and use URL context
-        $organizations = $this->Projects->Organizations->find('list', limit: 200)->all();
+        $organizations = $this->Projects->Organizations->find('list', limit: 200);
+        $organizations = $this->Authorization->applyScope($organizations, 'index');
         $teams = $this->Projects->Teams->find('list', limit: 200);
         $teams = $this->Authorization->applyScope($teams, 'index');
         $this->set(compact('project', 'organizations', 'teams'));
@@ -85,8 +85,8 @@ class ProjectsController extends AppController
             }
             $this->Flash->error(__('The project could not be saved. Please, try again.'));
         }
-        // TODO remove organizations from UI and use URL context
-        $organizations = $this->Projects->Organizations->find('list', limit: 200)->all();
+        $organizations = $this->Projects->Organizations->find('list', limit: 200);
+        $organizations = $this->Authorization->applyScope($organizations, 'index');
         $teams = $this->Projects->Teams->find('list', limit: 200);
         $teams = $this->Authorization->applyScope($teams, 'index');
         $this->set(compact('project', 'organizations', 'teams'));
