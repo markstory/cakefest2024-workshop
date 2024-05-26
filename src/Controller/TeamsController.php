@@ -34,7 +34,7 @@ class TeamsController extends AppController
      */
     public function view($id = null)
     {
-        $team = $this->Teams->get($id, contain: ['Organizations', 'Projects', 'TeamMembers']);
+        $team = $this->Teams->get($id, contain: ['Organizations', 'Projects', 'OrganizationMembers.Users']);
         $this->Authorization->authorize($team);
         $this->set(compact('team'));
     }
@@ -62,7 +62,9 @@ class TeamsController extends AppController
         $organizations = $this->Authorization->applyScope($organizations, 'index');
         $projects = $this->Teams->Projects->find('list', limit: 200);
         $projects = $this->Authorization->applyScope($projects, 'index');
-        $this->set(compact('team', 'organizations', 'projects'));
+        $members = $this->Teams->OrganizationMembers->find('list', limit: 200);
+        $members = $this->Authorization->applyScope($members, 'index');
+        $this->set(compact('team', 'organizations', 'projects', 'members'));
     }
 
     /**
@@ -86,8 +88,13 @@ class TeamsController extends AppController
             $this->Flash->error(__('The team could not be saved. Please, try again.'));
         }
         $organizations = $this->Teams->Organizations->find('list', limit: 200)->all();
-        $projects = $this->Teams->Projects->find('list', limit: 200)->all();
-        $this->set(compact('team', 'organizations', 'projects'));
+
+        $projects = $this->Teams->Projects->find('list', limit: 200);
+        $projects = $this->Authorization->applyScope($projects, 'index');
+
+        $members = $this->Teams->OrganizationMembers->find('list', limit: 200);
+        $members = $this->Authorization->applyScope($members, 'index');
+        $this->set(compact('team', 'organizations', 'projects', 'members'));
     }
 
     /**

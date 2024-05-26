@@ -4,6 +4,7 @@
  * @var \App\Model\Entity\Team $team
  * @var string[]|\Cake\Collection\CollectionInterface $organizations
  * @var string[]|\Cake\Collection\CollectionInterface $projects
+ * @var \Cake\Collection\CollectionInterface|string[] $members
  */
 ?>
 <div class="row">
@@ -26,6 +27,7 @@
                 <?php
                     echo $this->Form->control('name');
                     echo $this->Form->control('projects._ids', ['options' => $projects]);
+                    echo $this->Form->control('organization_members._ids', ['options' => $members]);
                 ?>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>

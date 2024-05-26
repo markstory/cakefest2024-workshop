@@ -20,9 +20,9 @@
                 <legend><?= __('Add Team') ?></legend>
                 <?php
                     echo $this->Form->control('organization_id', ['options' => $organizations]);
-                    echo $this->Form->control('slug');
                     echo $this->Form->control('name');
                     echo $this->Form->control('projects._ids', ['options' => $projects]);
+                    echo $this->Form->control('organization_members._ids', ['options' => $members]);
                 ?>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>

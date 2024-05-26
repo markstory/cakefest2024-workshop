@@ -38,6 +38,7 @@ class Team extends Entity
         'modified' => true,
         'organization' => true,
         'team_members' => true,
+        'organization_members' => true,
         'projects' => true,
     ];
 }

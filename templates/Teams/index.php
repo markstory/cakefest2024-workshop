@@ -11,9 +11,7 @@
         <table>
             <thead>
                 <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
                     <th><?= $this->Paginator->sort('organization_id') ?></th>
-                    <th><?= $this->Paginator->sort('slug') ?></th>
                     <th><?= $this->Paginator->sort('name') ?></th>
                     <th><?= $this->Paginator->sort('created') ?></th>
                     <th><?= $this->Paginator->sort('modified') ?></th>
@@ -23,9 +21,7 @@
             <tbody>
                 <?php foreach ($teams as $team): ?>
                 <tr>
-                    <td><?= $this->Number->format($team->id) ?></td>
                     <td><?= $team->hasValue('organization') ? $this->Html->link($team->organization->name, ['controller' => 'Organizations', 'action' => 'view', $team->organization->id]) : '' ?></td>
-                    <td><?= h($team->slug) ?></td>
                     <td><?= h($team->name) ?></td>
                     <td><?= h($team->created) ?></td>
                     <td><?= h($team->modified) ?></td>

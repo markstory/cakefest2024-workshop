@@ -54,8 +54,10 @@ class TeamsTable extends Table
             'foreignKey' => 'organization_id',
             'joinType' => 'INNER',
         ]);
-        $this->hasMany('TeamMembers', [
+        $this->belongsToMany('OrganizationMembers', [
             'foreignKey' => 'team_id',
+            'targetForeignKey' => 'organization_member_id',
+            'joinTable' => 'team_members',
         ]);
         $this->belongsToMany('Projects', [
             'foreignKey' => 'team_id',
