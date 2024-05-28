@@ -97,6 +97,7 @@ CREATE TABLE projects (
     name VARCHAR,
     created DATETIME,
     modified DATETIME,
+    UNIQUE(organization_id, slug),
     FOREIGN KEY(organization_id) REFERENCES organizations(id) ON DELETE CASCADE
 );
 CREATE TABLE projects_teams (
@@ -105,6 +106,7 @@ CREATE TABLE projects_teams (
     team_id INTEGER NOT NULL,
     created DATETIME,
     modified DATETIME,
+    UNIQUE(project_id, team_id),
     FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE,
     FOREIGN KEY(team_id) REFERENCES teams(id) ON DELETE CASCADE
 );
