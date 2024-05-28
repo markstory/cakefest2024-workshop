@@ -108,11 +108,4 @@ class OrganizationMembersTable extends Table
         return $rules;
     }
 
-    public function beforeSave(EventInterface $event, OrganizationInvite $invite, array $options): bool
-    {
-        if ($invite->isDirty('user_id')) {
-            $invite->refreshVerifyToken();
-        }
-        return true;
-    }
 }

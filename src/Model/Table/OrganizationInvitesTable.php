@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\OrganizationInvite;
 use App\Model\Enum\MemberRoleEnum;
+use ArrayObject;
 use Cake\Database\Type\EnumType;
+use Cake\Event\EventInterface;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -111,5 +114,14 @@ class OrganizationInvitesTable extends Table
         $rules->add($rules->existsIn(['organization_member_id'], 'OrganizationMembers'), ['errorField' => 'organization_member_id']);
 
         return $rules;
+    }
+
+    public function beforeSave(EventInterface $event, OrganizationInvite $invite, ArrayObject $options): bool
+    {
+        if ($invite->isDirty('user_id')) {
+            $invite->refreshVerifyToken();
+        }
+
+        return true;
     }
 }
