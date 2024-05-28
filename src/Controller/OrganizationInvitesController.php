@@ -53,7 +53,7 @@ class OrganizationInvitesController extends AppController
 
         if ($this->request->is('post')) {
             $organizationInvite = $this->OrganizationInvites->patchEntity($organizationInvite, $this->request->getData());
-            $organizationInvite->verify_token = Text::uuid();
+            $organizationInvite->refreshVerifyToken();
             if ($this->OrganizationInvites->save($organizationInvite)) {
                 $this->Flash->success(__('The organization invite has been saved.'));
 
@@ -64,30 +64,6 @@ class OrganizationInvitesController extends AppController
         $organizations = $this->OrganizationInvites->Organizations->find('list', limit: 200);
         $organizations = $this->Authorization->applyScope($organizations, 'index');
         $this->set(compact('organizationInvite', 'organizations'));
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Organization Invite id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function edit(?string $id = null)
-    {
-        $organizationInvite = $this->OrganizationInvites->get($id, contain: []);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $organizationInvite = $this->OrganizationInvites->patchEntity($organizationInvite, $this->request->getData());
-            if ($this->OrganizationInvites->save($organizationInvite)) {
-                $this->Flash->success(__('The organization invite has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The organization invite could not be saved. Please, try again.'));
-        }
-        $organizations = $this->OrganizationInvites->Organizations->find('list', limit: 200)->all();
-        $organizationMembers = $this->OrganizationInvites->OrganizationMembers->find('list', limit: 200)->all();
-        $this->set(compact('organizationInvite', 'organizations', 'organizationMembers'));
     }
 
     /**

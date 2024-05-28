@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\Utility\Text;
 
 /**
  * OrganizationInvite Entity
@@ -44,4 +45,9 @@ class OrganizationInvite extends Entity
         'organization' => true,
         'organization_member' => true,
     ];
+
+    public function refreshVerifyToken(): void
+    {
+        $this->verify_token = Text::uuid();
+    }
 }

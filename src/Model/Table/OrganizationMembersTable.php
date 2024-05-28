@@ -5,6 +5,7 @@ namespace App\Model\Table;
 
 use App\Model\Enum\MemberRoleEnum;
 use Cake\Database\Type\EnumType;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -105,5 +106,13 @@ class OrganizationMembersTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'), ['errorField' => 'user_id']);
 
         return $rules;
+    }
+
+    public function beforeSave(EventInterface $event, OrganizationInvite $invite, array $options): bool
+    {
+        if ($invite->isDirty('user_id')) {
+            $invite->refreshVerifyToken();
+        }
+        return true;
     }
 }

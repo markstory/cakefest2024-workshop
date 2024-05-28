@@ -51,16 +51,14 @@
                             <td><?= h($organizationInvite->created) ?></td>
                             <td><?= h($organizationInvite->modified) ?></td>
                             <td class="actions">
-                                <?= $this->Html->link(__('Edit'), ['controller' => 'OrganizationInvites', 'action' => 'edit', $organizationInvite->id]) ?>
                                 <?= $this->Form->postLink(__('Delete'), ['controller' => 'OrganizationInvites', 'action' => 'delete', $organizationInvite->id], ['confirm' => __('Are you sure you want to delete # {0}?', $organizationInvite->id)]) ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>
                     </table>
                 </div>
-                <?php else: ?>
-                    <?= $this->Html->link(__('Invite a new member'), ['_path' => 'OrganizationInvites::add', 'orgslug' => $organization->slug]) ?>
                 <?php endif; ?>
+                <?= $this->Html->link(__('Invite a new member'), ['_path' => 'OrganizationInvites::add', 'orgslug' => $organization->slug]) ?>
             </div>
             <div class="related">
                 <h4><?= __('Related Organization Members') ?></h4>
