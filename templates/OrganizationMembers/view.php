@@ -16,7 +16,7 @@
     </aside>
     <div class="column column-80">
         <div class="organizationMembers view content">
-            <h3><?= h($organizationMember->role) ?></h3>
+            <h3><?= h($organizationMember->user->name) ?> | <?= h($organizationMember->role->value) ?></h3>
             <table>
                 <tr>
                     <th><?= __('Organization') ?></th>
