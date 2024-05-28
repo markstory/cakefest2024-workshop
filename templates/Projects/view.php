@@ -36,7 +36,7 @@
                 </tr>
             </table>
             <div class="related">
-                <h4><?= __('Related Teams') ?></h4>
+                <h4><?= __('Teams') ?></h4>
                 <?php if (!empty($project->teams)) : ?>
                 <div class="table-responsive">
                     <table>

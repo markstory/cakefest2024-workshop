@@ -13,6 +13,7 @@
             <?= $this->Html->link(__('List Organizations'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
             <?= $this->Html->link(__('New Team'), ['controller' => 'Teams', 'action' => 'add'], ['class' => 'side-nav-item']) ?>
             <?= $this->Html->link(__('New Project'), ['controller' => 'Projects', 'action' => 'add'], ['class' => 'side-nav-item']) ?>
+            <?= $this->Html->link(__('Invite Member'), ['_path' => 'OrganizationInvites::add', 'orgslug' => $organization->slug], ['class' => 'side-nav-item']) ?>
         </div>
     </aside>
     <div class="column column-80">
@@ -33,7 +34,7 @@
                 </tr>
             </table>
             <div class="related">
-                <h4><?= __('Related Organization Invites') ?></h4>
+                <h4><?= __('Pending Invites') ?></h4>
                 <?php if (!empty($organization->organization_invites)) : ?>
                 <div class="table-responsive">
                     <table>
@@ -58,10 +59,9 @@
                     </table>
                 </div>
                 <?php endif; ?>
-                <?= $this->Html->link(__('Invite a new member'), ['_path' => 'OrganizationInvites::add', 'orgslug' => $organization->slug]) ?>
             </div>
             <div class="related">
-                <h4><?= __('Related Organization Members') ?></h4>
+                <h4><?= __('Members') ?></h4>
                 <?php if (!empty($organization->organization_members)) : ?>
                 <div class="table-responsive">
                     <table>
@@ -91,7 +91,7 @@
                 <?php endif; ?>
             </div>
             <div class="related">
-                <h4><?= __('Related Projects') ?></h4>
+                <h4><?= __('Projects') ?></h4>
                 <?php if (!empty($organization->projects)) : ?>
                 <div class="table-responsive">
                     <table>
@@ -120,7 +120,7 @@
                 <?php endif; ?>
             </div>
             <div class="related">
-                <h4><?= __('Related Teams') ?></h4>
+                <h4><?= __('Teams') ?></h4>
                 <?php if (!empty($organization->teams)) : ?>
                 <div class="table-responsive">
                     <table>
