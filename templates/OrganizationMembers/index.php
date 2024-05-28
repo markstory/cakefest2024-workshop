@@ -26,7 +26,7 @@
                     <td><?= $this->Number->format($organizationMember->id) ?></td>
                     <td><?= $organizationMember->hasValue('organization') ? $this->Html->link($organizationMember->organization->name, ['controller' => 'Organizations', 'action' => 'view', $organizationMember->organization->id]) : '' ?></td>
                     <td><?= $organizationMember->hasValue('user') ? $this->Html->link($organizationMember->user->name, ['controller' => 'Users', 'action' => 'view', $organizationMember->user->id]) : '' ?></td>
-                    <td><?= h($organizationMember->role) ?></td>
+                    <td><?= h($organizationMember->role->value) ?></td>
                     <td><?= h($organizationMember->created) ?></td>
                     <td><?= h($organizationMember->modified) ?></td>
                     <td class="actions">

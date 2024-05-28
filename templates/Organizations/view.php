@@ -49,8 +49,6 @@
                             <th><?= __('Organization Id') ?></th>
                             <th><?= __('Email') ?></th>
                             <th><?= __('Role') ?></th>
-                            <th><?= __('Teams') ?></th>
-                            <th><?= __('Organization Member Id') ?></th>
                             <th><?= __('Created') ?></th>
                             <th><?= __('Modified') ?></th>
                             <th class="actions"><?= __('Actions') ?></th>
@@ -60,9 +58,7 @@
                             <td><?= h($organizationInvite->id) ?></td>
                             <td><?= h($organizationInvite->organization_id) ?></td>
                             <td><?= h($organizationInvite->email) ?></td>
-                            <td><?= h($organizationInvite->role) ?></td>
-                            <td><?= h($organizationInvite->teams) ?></td>
-                            <td><?= h($organizationInvite->organization_member_id) ?></td>
+                            <td><?= h($organizationInvite->role->value) ?></td>
                             <td><?= h($organizationInvite->created) ?></td>
                             <td><?= h($organizationInvite->modified) ?></td>
                             <td class="actions">
@@ -95,11 +91,10 @@
                             <td><?= h($organizationMember->id) ?></td>
                             <td><?= h($organizationMember->organization_id) ?></td>
                             <td><?= h($organizationMember->user_id) ?></td>
-                            <td><?= h($organizationMember->role) ?></td>
+                            <td><?= h($organizationMember->role->value) ?></td>
                             <td><?= h($organizationMember->created) ?></td>
                             <td><?= h($organizationMember->modified) ?></td>
                             <td class="actions">
-                                <?= $this->Html->link(__('View'), ['controller' => 'OrganizationMembers', 'action' => 'view', $organizationMember->id]) ?>
                                 <?= $this->Html->link(__('Edit'), ['controller' => 'OrganizationMembers', 'action' => 'edit', $organizationMember->id]) ?>
                                 <?= $this->Form->postLink(__('Delete'), ['controller' => 'OrganizationMembers', 'action' => 'delete', $organizationMember->id], ['confirm' => __('Are you sure you want to delete # {0}?', $organizationMember->id)]) ?>
                             </td>

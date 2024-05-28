@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Enum\MemberRoleEnum;
+use Cake\Database\Type\EnumType;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -55,6 +57,8 @@ class OrganizationInvitesTable extends Table
         $this->belongsTo('OrganizationMembers', [
             'foreignKey' => 'organization_member_id',
         ]);
+
+        $this->getSchema()->setColumnType('role', EnumType::from(MemberRoleEnum::class));
     }
 
     /**
