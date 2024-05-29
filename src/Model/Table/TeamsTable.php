@@ -78,7 +78,6 @@ class TeamsTable extends Table
 
         $validator
             ->scalar('slug')
-            ->requirePresence('slug', 'create')
             ->notEmptyString('slug');
 
         $validator

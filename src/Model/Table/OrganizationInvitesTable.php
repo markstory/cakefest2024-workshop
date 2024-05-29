@@ -79,8 +79,7 @@ class OrganizationInvitesTable extends Table
             ->notEmptyString('email');
 
         $validator
-            ->scalar('role')
-            ->notEmptyString('role');
+            ->enum('role', MemberRoleEnum::class);
 
         $validator
             ->scalar('teams')

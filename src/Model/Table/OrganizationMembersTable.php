@@ -87,8 +87,7 @@ class OrganizationMembersTable extends Table
             ->notEmptyString('user_id');
 
         $validator
-            ->scalar('role')
-            ->notEmptyString('role');
+            ->enum('role', MemberRoleEnum::class);
 
         return $validator;
     }
