@@ -12,7 +12,7 @@ use Cake\Utility\Text;
  * @property int $id
  * @property int $organization_id
  * @property string $email
- * @property string $role
+ * @property \App\Model\Enum\MemberRoleEnum $role
  * @property string|null $teams
  * @property int|null $organization_member_id
  * @property \Cake\I18n\DateTime|null $created

@@ -53,7 +53,7 @@
                         <?php foreach ($user->organization_members as $organizationMember) : ?>
                         <tr>
                             <td><?= h($organizationMember->organization?->name) ?></td>
-                            <td><?= h($organizationMember->role) ?></td>
+                            <td><?= h($organizationMember->role->value) ?></td>
                             <td><?= h($organizationMember->created) ?></td>
                             <td><?= h($organizationMember->modified) ?></td>
                             <td class="actions">
