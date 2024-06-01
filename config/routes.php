@@ -50,6 +50,51 @@ return function (RouteBuilder $routes): void {
     $routes->setRouteClass(DashedRoute::class);
 
     $routes->scope('/', function (RouteBuilder $builder): void {
+        $builder->connect('/login', 'Users::login', ['_name' => 'users:login']);
+
+        $builder->connect('/orgs/', 'Organizations::index', ['_name' => 'orgs:index']);
+
+        $builder->scope('/orgs/{orgslug}', function (RouteBuilder $builder): void {
+            $builder->connect('/', 'Organizations::view', ['_name' => 'orgs:view']);
+            $builder->connect('/edit', 'Organizations::edit', ['_name' => 'orgs:edit']);
+            $builder->connect('/delete', 'Organizations::delete', ['_name' => 'orgs:delete']);
+            $builder->connect('/invites/add', 'OrganizationInvites::add', ['_name' => 'orginvites:add']);
+        });
+
+        $builder->scope('/orgs/{orgslug}/teams', ['controller' => 'Teams'], function (RouteBuilder $builder): void {
+            $builder->connect('/', 'Teams::index', ['_name' => 'teams:index']);
+            $builder->connect('/add', 'Teams::add', ['_name' => 'teams:add']);
+            $builder->connect('/edit/*', 'Teams::edit', ['_name' => 'teams:edit']);
+            $builder->connect('/view/*', 'Teams::view', ['_name' => 'teams:view']);
+            $builder->connect('/delete/*', 'Teams::delete', ['_name' => 'teams:delete']);
+        });
+
+        $builder->scope('/orgs/{orgslug}/projects', ['controller' => 'Projects'], function (RouteBuilder $builder): void {
+            $builder->connect('/', 'Projects::index', ['_name' => 'projects:index']);
+            $builder->connect('/add', 'Projects::add', ['_name' => 'projects:add']);
+            $builder->connect('/edit/*', 'Projects::edit', ['_name' => 'projects:edit']);
+            $builder->connect('/view/*', 'Projects::view', ['_name' => 'projects:view']);
+            $builder->connect('/delete/*', 'Projects::delete', ['_name' => 'projects:delete']);
+        });
+
+        $builder->scope('/orgs/{orgslug}/members', ['controller' => 'OrganizationMembers'], function (RouteBuilder $builder): void {
+            $builder->connect('/', 'OrganizationMembers::index', ['_name' => 'orgmembers:index']);
+            $builder->connect('/add', 'OrganizationMembers::add', ['_name' => 'orgmembers:add']);
+            $builder->connect('/edit/*', 'OrganizationMembers::edit', ['_name' => 'orgmembers:edit']);
+            $builder->connect('/view/*', 'OrganizationMembers::view', ['_name' => 'orgmembers:view']);
+            $builder->connect('/delete/*', 'OrganizationMembers::delete', ['_name' => 'orgmembers:delete']);
+        });
+
+        $builder->scope('/orgs/{orgslug}/team-members', ['controller' => 'TeamMembers'], function (RouteBuilder $builder): void {
+            $builder->connect('/delete/*', 'TeamMembers::delete', ['_name' => 'teammembers:delete']);
+        });
+
+
+        $builder->scope('/users', ['controller' => 'Users'], function (RouteBuilder $builder): void {
+            $builder->connect('/view/*', 'Users::view', ['_name' => 'users:view']);
+            $builder->connect('/edit/*', 'Users::edit', ['_name' => 'users:edit']);
+        });
+
         /*
          * Here, we are connecting '/' (base path) to a controller called 'Pages',
          * its action called 'display', and we pass a param to select the view file
@@ -61,36 +106,5 @@ return function (RouteBuilder $routes): void {
          * ...and connect the rest of 'Pages' controller's URLs.
          */
         $builder->connect('/pages/*', 'Pages::display');
-
-        /*
-         * Connect catchall routes for all controllers.
-         *
-         * The `fallbacks` method is a shortcut for
-         *
-         * ```
-         * $builder->connect('/{controller}', ['action' => 'index']);
-         * $builder->connect('/{controller}/{action}/*', []);
-         * ```
-         *
-         * You can remove these routes once you've connected the
-         * routes you want in your application.
-         */
-        $builder->fallbacks();
     });
-
-    /*
-     * If you need a different set of middleware or none at all,
-     * open new scope and define routes there.
-     *
-     * ```
-     * $routes->scope('/api', function (RouteBuilder $builder): void {
-     *     // No $builder->applyMiddleware() here.
-     *
-     *     // Parse specified extensions from URLs
-     *     // $builder->setExtensions(['json', 'xml']);
-     *
-     *     // Connect API actions here.
-     * });
-     * ```
-     */
 };

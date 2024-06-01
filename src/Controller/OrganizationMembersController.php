@@ -17,12 +17,13 @@ class OrganizationMembersController extends AppController
      */
     public function index()
     {
-        $query = $this->OrganizationMembers->find()
-            ->contain(['Organizations', 'Users']);
+        $organization = $this->getOrganization();
+        $query = $this->OrganizationMembers->findByOrganizationId($organization->id)
+            ->contain(['Users']);
         $query = $this->Authorization->applyScope($query);
         $organizationMembers = $this->paginate($query);
 
-        $this->set(compact('organizationMembers'));
+        $this->set(compact('organizationMembers', 'organization'));
     }
 
     /**
@@ -34,9 +35,10 @@ class OrganizationMembersController extends AppController
      */
     public function view($id = null)
     {
-        $organizationMember = $this->OrganizationMembers->get($id, contain: ['Organizations', 'Users', 'OrganizationInvites', 'TeamMembers.Teams']);
+        $organization = $this->getOrganization();
+        $organizationMember = $this->OrganizationMembers->get($id, contain: ['Users', 'OrganizationInvites', 'TeamMembers.Teams']);
         $this->Authorization->authorize($organizationMember);
-        $this->set(compact('organizationMember'));
+        $this->set(compact('organizationMember', 'organization'));
     }
 
     /**
@@ -46,23 +48,23 @@ class OrganizationMembersController extends AppController
      */
     public function add()
     {
+        $organization = $this->getOrganization();
+        $this->Authorization->authorize($organization, 'edit');
+
         $organizationMember = $this->OrganizationMembers->newEmptyEntity();
         if ($this->request->is('post')) {
             $organizationMember = $this->OrganizationMembers->patchEntity($organizationMember, $this->request->getData());
+            $organizationMember->organization_id = $organization->id;
             $this->Authorization->authorize($organizationMember);
             if ($this->OrganizationMembers->save($organizationMember)) {
                 $this->Flash->success(__('The organization member has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'index', 'orgslug' => $organization->slug]);
             }
             $this->Flash->error(__('The organization member could not be saved. Please, try again.'));
         }
-        // TODO remove users and limit organization based on current membership
-        // TODO remove this, and use invitation links inteas
-        $organizations = $this->OrganizationMembers->Organizations->find('list', limit: 200);
-        $organizations = $this->Authorization->applyScope($organizations, 'index');
         $users = $this->OrganizationMembers->Users->find('list', limit: 200)->all();
-        $this->set(compact('organizationMember', 'organizations', 'users'));
+        $this->set(compact('organizationMember', 'organization', 'users'));
     }
 
     /**
@@ -74,21 +76,21 @@ class OrganizationMembersController extends AppController
      */
     public function edit($id = null)
     {
+        $organization = $this->getOrganization();
         $organizationMember = $this->OrganizationMembers->get($id, contain: []);
+        $this->Authorization->authorize($organizationMember);
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $organizationMember = $this->OrganizationMembers->patchEntity($organizationMember, $this->request->getData());
-            $this->Authorization->authorize($organizationMember);
             if ($this->OrganizationMembers->save($organizationMember)) {
                 $this->Flash->success(__('The organization member has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'index', 'orgslug' => $organization->slug]);
             }
             $this->Flash->error(__('The organization member could not be saved. Please, try again.'));
         }
-        $organizations = $this->OrganizationMembers->Organizations->find('list', limit: 200);
-        $organizations = $this->Authorization->applyScope($organizations, 'index');
         $users = $this->OrganizationMembers->Users->find('list', limit: 200)->all();
-        $this->set(compact('organizationMember', 'organizations', 'users'));
+        $this->set(compact('organizationMember', 'organization', 'users'));
     }
 
     /**
@@ -100,6 +102,7 @@ class OrganizationMembersController extends AppController
      */
     public function delete($id = null)
     {
+        $organization = $this->getOrganization();
         $this->request->allowMethod(['post', 'delete']);
         $organizationMember = $this->OrganizationMembers->get($id);
         if ($this->OrganizationMembers->delete($organizationMember)) {
@@ -108,6 +111,6 @@ class OrganizationMembersController extends AppController
             $this->Flash->error(__('The organization member could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect(['action' => 'index', 'orgslug' => $organization->slug]);
     }
 }

@@ -59,7 +59,8 @@ class AppController extends Controller
     {
         $organizations = $this->fetchTable('Organizations');
         $organization = $organizations->findBySlug($this->request->getParam('orgslug'))->firstOrFail();
-        $this->Authorization->authorize($organization);
+        // TODO this could use more refined action mappings.
+        $this->Authorization->authorize($organization, 'view');
 
         return $organization;
     }

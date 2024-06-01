@@ -2,7 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Project $project
- * @var \Cake\Collection\CollectionInterface|string[] $organizations
+ * @var \App\Model\Entity\Organization $organization
  * @var \Cake\Collection\CollectionInterface|string[] $teams
  */
 ?>
@@ -10,7 +10,7 @@
     <aside class="column">
         <div class="side-nav">
             <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('List Projects'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
+            <?= $this->Html->link(__('List Projects'), ['action' => 'index', 'orgslug' => $organization->slug], ['class' => 'side-nav-item']) ?>
         </div>
     </aside>
     <div class="column column-80">
@@ -19,7 +19,7 @@
             <fieldset>
                 <legend><?= __('Add Project') ?></legend>
                 <?php
-                    echo $this->Form->control('organization_id', ['options' => $organizations]);
+                    echo $this->Form->hidden('organization_id', ['value' => $organization->id]);
                     echo $this->Form->control('name');
                     echo $this->Form->control('teams._ids', ['options' => $teams]);
                 ?>

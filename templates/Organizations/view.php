@@ -8,11 +8,11 @@
     <aside class="column">
         <div class="side-nav">
             <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('Edit Organization'), ['action' => 'edit', $organization->id], ['class' => 'side-nav-item']) ?>
-            <?= $this->Form->postLink(__('Delete Organization'), ['action' => 'delete', $organization->id], ['confirm' => __('Are you sure you want to delete # {0}?', $organization->id), 'class' => 'side-nav-item']) ?>
+            <?= $this->Html->link(__('Edit Organization'), ['action' => 'edit', 'orgslug' => $organization->slug], ['class' => 'side-nav-item']) ?>
+            <?= $this->Form->postLink(__('Delete Organization'), ['action' => 'delete', 'orgslug' => $organization->slug], ['confirm' => __('Are you sure you want to delete # {0}?', $organization->slug), 'class' => 'side-nav-item']) ?>
             <?= $this->Html->link(__('List Organizations'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('New Team'), ['controller' => 'Teams', 'action' => 'add'], ['class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('New Project'), ['controller' => 'Projects', 'action' => 'add'], ['class' => 'side-nav-item']) ?>
+            <?= $this->Html->link(__('New Team'), ['controller' => 'Teams', 'action' => 'add', 'orgslug' => $organization->slug], ['class' => 'side-nav-item']) ?>
+            <?= $this->Html->link(__('New Project'), ['controller' => 'Projects', 'action' => 'add', 'orgslug' => $organization->slug], ['class' => 'side-nav-item']) ?>
             <?= $this->Html->link(__('Invite Member'), ['_path' => 'OrganizationInvites::add', 'orgslug' => $organization->slug], ['class' => 'side-nav-item']) ?>
         </div>
     </aside>
@@ -52,7 +52,7 @@
                             <td><?= h($organizationInvite->created) ?></td>
                             <td><?= h($organizationInvite->modified) ?></td>
                             <td class="actions">
-                                <?= $this->Form->postLink(__('Delete'), ['controller' => 'OrganizationInvites', 'action' => 'delete', $organizationInvite->id], ['confirm' => __('Are you sure you want to delete # {0}?', $organizationInvite->id)]) ?>
+                                <?= $this->Form->postLink(__('Delete'), ['controller' => 'OrganizationInvites', 'action' => 'delete', 'orgslug' => $organization->slug, $organizationInvite->id], ['confirm' => __('Are you sure you want to delete # {0}?', $organizationInvite->id)]) ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -79,8 +79,8 @@
                             <td><?= h($organizationMember->created) ?></td>
                             <td><?= h($organizationMember->modified) ?></td>
                             <td class="actions">
-                                <?= $this->Html->link(__('Edit'), ['controller' => 'OrganizationMembers', 'action' => 'edit', $organizationMember->id]) ?>
-                                <?= $this->Form->postLink(__('Delete'), ['controller' => 'OrganizationMembers', 'action' => 'delete', $organizationMember->id], ['confirm' => __('Are you sure you want to delete # {0}?', $organizationMember->id)]) ?>
+                                <?= $this->Html->link(__('Edit'), ['controller' => 'OrganizationMembers', 'action' => 'edit','orgslug' => $organization->slug,  $organizationMember->id]) ?>
+                                <?= $this->Form->postLink(__('Delete'), ['controller' => 'OrganizationMembers', 'action' => 'delete', 'orgslug' => $organization->slug, $organizationMember->id], ['confirm' => __('Are you sure you want to delete # {0}?', $organizationMember->id)]) ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -107,9 +107,9 @@
                             <td><?= h($project->created) ?></td>
                             <td><?= h($project->modified) ?></td>
                             <td class="actions">
-                                <?= $this->Html->link(__('View'), ['controller' => 'Projects', 'action' => 'view', $project->id]) ?>
-                                <?= $this->Html->link(__('Edit'), ['controller' => 'Projects', 'action' => 'edit', $project->id]) ?>
-                                <?= $this->Form->postLink(__('Delete'), ['controller' => 'Projects', 'action' => 'delete', $project->id], ['confirm' => __('Are you sure you want to delete # {0}?', $project->id)]) ?>
+                                <?= $this->Html->link(__('View'), ['controller' => 'Projects', 'action' => 'view', 'orgslug' => $organization->slug, $project->id]) ?>
+                                <?= $this->Html->link(__('Edit'), ['controller' => 'Projects', 'action' => 'edit', 'orgslug' => $organization->slug, $project->id]) ?>
+                                <?= $this->Form->postLink(__('Delete'), ['controller' => 'Projects', 'action' => 'delete', 'orgslug' => $organization->slug, $project->id], ['confirm' => __('Are you sure you want to delete # {0}?', $project->id)]) ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -136,9 +136,9 @@
                             <td><?= h($team->created) ?></td>
                             <td><?= h($team->modified) ?></td>
                             <td class="actions">
-                                <?= $this->Html->link(__('View'), ['controller' => 'Teams', 'action' => 'view', $team->id]) ?>
-                                <?= $this->Html->link(__('Edit'), ['controller' => 'Teams', 'action' => 'edit', $team->id]) ?>
-                                <?= $this->Form->postLink(__('Delete'), ['controller' => 'Teams', 'action' => 'delete', $team->id], ['confirm' => __('Are you sure you want to delete # {0}?', $team->id)]) ?>
+                                <?= $this->Html->link(__('View'), ['controller' => 'Teams', 'action' => 'view', 'orgslug' => $organization->slug, $team->id]) ?>
+                                <?= $this->Html->link(__('Edit'), ['controller' => 'Teams', 'action' => 'edit', 'orgslug' => $organization->slug, $team->id]) ?>
+                                <?= $this->Form->postLink(__('Delete'), ['controller' => 'Teams', 'action' => 'delete', 'orgslug' => $organization->slug, $team->id], ['confirm' => __('Are you sure you want to delete # {0}?', $team->id)]) ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>

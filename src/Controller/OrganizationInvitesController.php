@@ -11,20 +11,6 @@ namespace App\Controller;
 class OrganizationInvitesController extends AppController
 {
     /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
-     */
-    public function index()
-    {
-        $query = $this->OrganizationInvites->find()
-            ->contain(['Organizations', 'OrganizationMembers']);
-        $organizationInvites = $this->paginate($query);
-
-        $this->set(compact('organizationInvites'));
-    }
-
-    /**
      * View method
      *
      * @param string|null $id Organization Invite id.
@@ -55,7 +41,7 @@ class OrganizationInvitesController extends AppController
             if ($this->OrganizationInvites->save($organizationInvite)) {
                 $this->Flash->success(__('The organization invite has been saved.'));
 
-                return $this->redirect(['controller' => 'Organizations', 'action' => 'view', $organizationInvite->organization_id]);
+                return $this->redirect(['controller' => 'Organizations', 'action' => 'view', 'orgslug' => $organization->slug]);
             }
             $this->Flash->error(__('The organization invite could not be saved. Please, try again.'));
         }
@@ -74,6 +60,7 @@ class OrganizationInvitesController extends AppController
     public function delete(?string $id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
+        $organization = $this->getOrganization();
         $organizationInvite = $this->OrganizationInvites->get($id);
         if ($this->OrganizationInvites->delete($organizationInvite)) {
             $this->Flash->success(__('The organization invite has been deleted.'));
@@ -81,7 +68,7 @@ class OrganizationInvitesController extends AppController
             $this->Flash->error(__('The organization invite could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect(['action' => 'index', 'orgslug' => $organization->slug]);
     }
 
     /**
@@ -91,12 +78,13 @@ class OrganizationInvitesController extends AppController
      */
     public function accept($token)
     {
+        $organization = $this->getOrganization();
         $invite = $this->OrganizationInvites->findByVerifyToken($token)->firstOrFail();
         $user = $this->Authentication->getIdentity();
         if ($user->email != $invite->email) {
             $this->Flash->error(__('You cannot accept an invitation for someone else.'));
 
-            return $this->redirect(['controller' => 'Organizations', 'action' => 'view', $invite->organization_id]);
+            return $this->redirect(['controller' => 'Organizations', 'action' => 'view', 'orgslug' => $organization->slug]);
         }
 
         $this->OrganizationInvites->getConnection()->transactional(function () use ($invite, $user) {
@@ -111,6 +99,6 @@ class OrganizationInvitesController extends AppController
             $this->Flash->success(__('Invite accepted'));
         });
 
-        return $this->redirect(['controller' => 'Organizations', 'action' => 'view', $invite->organization_id]);
+        return $this->redirect(['controller' => 'Organizations', 'action' => 'view', 'orgslug' => $organization->slug]);
     }
 }

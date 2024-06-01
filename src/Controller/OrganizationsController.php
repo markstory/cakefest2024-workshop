@@ -27,13 +27,15 @@ class OrganizationsController extends AppController
     /**
      * View method
      *
-     * @param string|null $id Organization id.
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view()
     {
-        $organization = $this->Organizations->get($id, contain: ['OrganizationInvites', 'OrganizationMembers.Users', 'OrganizationOptions', 'Projects', 'Teams']);
+        $organization = $this->Organizations
+            ->findBySlug($this->request->getParam('orgslug'))
+            ->contain(['OrganizationInvites', 'OrganizationMembers.Users', 'OrganizationOptions', 'Projects', 'Teams'])
+            ->firstOrFail();
         $this->Authorization->authorize($organization);
         $this->set(compact('organization'));
     }
@@ -71,13 +73,12 @@ class OrganizationsController extends AppController
     /**
      * Edit method
      *
-     * @param string|null $id Organization id.
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit()
     {
-        $organization = $this->Organizations->get($id, contain: []);
+        $organization = $this->getOrganization();
         $this->Authorization->authorize($organization);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $organization = $this->Organizations->patchEntity($organization, $this->request->getData());

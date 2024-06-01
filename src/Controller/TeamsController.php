@@ -17,12 +17,12 @@ class TeamsController extends AppController
      */
     public function index()
     {
-        $query = $this->Teams->find()
-            ->contain(['Organizations']);
+        $organization = $this->getOrganization();
+        $query = $this->Teams->findByOrganizationId($organization->id);
         $query = $this->Authorization->applyScope($query);
         $teams = $this->paginate($query);
 
-        $this->set(compact('teams'));
+        $this->set(compact('teams', 'organization'));
     }
 
     /**
@@ -34,9 +34,10 @@ class TeamsController extends AppController
      */
     public function view($id = null)
     {
-        $team = $this->Teams->get($id, contain: ['Organizations', 'Projects', 'OrganizationMembers.Users']);
+        $organization = $this->getOrganization();
+        $team = $this->Teams->get($id, contain: ['Projects', 'OrganizationMembers.Users']);
         $this->Authorization->authorize($team);
-        $this->set(compact('team'));
+        $this->set(compact('team', 'organization'));
     }
 
     /**
@@ -47,24 +48,25 @@ class TeamsController extends AppController
     public function add()
     {
         $team = $this->Teams->newEmptyEntity();
+        $organization = $this->getOrganization();
 
         if ($this->request->is('post')) {
             $team = $this->Teams->patchEntity($team, $this->request->getData());
+            $team->organization_id = $organization->id;
+
             $this->Authorization->authorize($team);
             if ($this->Teams->save($team)) {
                 $this->Flash->success(__('The team has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'index', 'orgslug' => $organization->slug]);
             }
             $this->Flash->error(__('The team could not be saved. Please, try again.'));
         }
-        $organizations = $this->Teams->Organizations->find('list', limit: 200);
-        $organizations = $this->Authorization->applyScope($organizations, 'index');
         $projects = $this->Teams->Projects->find('list', limit: 200);
         $projects = $this->Authorization->applyScope($projects, 'index');
         $members = $this->Teams->OrganizationMembers->find('list', limit: 200);
         $members = $this->Authorization->applyScope($members, 'index');
-        $this->set(compact('team', 'organizations', 'projects', 'members'));
+        $this->set(compact('team', 'organization', 'projects', 'members'));
     }
 
     /**
@@ -76,6 +78,7 @@ class TeamsController extends AppController
      */
     public function edit($id = null)
     {
+        $organization = $this->getOrganization();
         $team = $this->Teams->get($id, contain: ['Projects']);
         $this->Authorization->authorize($team);
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -83,18 +86,16 @@ class TeamsController extends AppController
             if ($this->Teams->save($team)) {
                 $this->Flash->success(__('The team has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'index', 'orgslug' => $organization->slug]);
             }
             $this->Flash->error(__('The team could not be saved. Please, try again.'));
         }
-        $organizations = $this->Teams->Organizations->find('list', limit: 200)->all();
-
         $projects = $this->Teams->Projects->find('list', limit: 200);
         $projects = $this->Authorization->applyScope($projects, 'index');
 
         $members = $this->Teams->OrganizationMembers->find('list', limit: 200);
         $members = $this->Authorization->applyScope($members, 'index');
-        $this->set(compact('team', 'organizations', 'projects', 'members'));
+        $this->set(compact('team', 'organization', 'projects', 'members'));
     }
 
     /**
@@ -106,6 +107,7 @@ class TeamsController extends AppController
      */
     public function delete($id = null)
     {
+        $organization = $this->getOrganization();
         $this->request->allowMethod(['post', 'delete']);
         $team = $this->Teams->get($id);
         $this->Authorization->authorize($team);
@@ -115,6 +117,6 @@ class TeamsController extends AppController
             $this->Flash->error(__('The team could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect(['action' => 'index', 'orgslug' => $organization->slug]);
     }
 }

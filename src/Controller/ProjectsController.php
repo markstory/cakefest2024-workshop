@@ -17,13 +17,12 @@ class ProjectsController extends AppController
      */
     public function index()
     {
-        // TODO load and display teams intead.
-        $query = $this->Projects->find()
-            ->contain(['Organizations']);
+        $organization = $this->getOrganization();
+        $query = $this->Projects->findByOrganizationId($organization->id);
         $query = $this->Authorization->applyScope($query);
         $projects = $this->paginate($query);
 
-        $this->set(compact('projects'));
+        $this->set(compact('projects', 'organization'));
     }
 
     /**
@@ -35,9 +34,10 @@ class ProjectsController extends AppController
      */
     public function view($id = null)
     {
+        $organization = $this->getOrganization();
         $project = $this->Projects->get($id, contain: ['Organizations', 'Teams']);
         $this->Authorization->authorize($project);
-        $this->set(compact('project'));
+        $this->set(compact('project', 'organization'));
     }
 
     /**
@@ -47,6 +47,7 @@ class ProjectsController extends AppController
      */
     public function add()
     {
+        $organization = $this->getOrganization();
         $project = $this->Projects->newEmptyEntity();
         if ($this->request->is('post')) {
             $project = $this->Projects->patchEntity($project, $this->request->getData());
@@ -54,15 +55,13 @@ class ProjectsController extends AppController
             if ($this->Projects->save($project)) {
                 $this->Flash->success(__('The project has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'index', 'orgslug' => $organization->slug]);
             }
             $this->Flash->error(__('The project could not be saved. Please, try again.'));
         }
-        $organizations = $this->Projects->Organizations->find('list', limit: 200);
-        $organizations = $this->Authorization->applyScope($organizations, 'index');
         $teams = $this->Projects->Teams->find('list', limit: 200);
         $teams = $this->Authorization->applyScope($teams, 'index');
-        $this->set(compact('project', 'organizations', 'teams'));
+        $this->set(compact('project', 'organization', 'teams'));
     }
 
     /**
@@ -74,6 +73,7 @@ class ProjectsController extends AppController
      */
     public function edit($id = null)
     {
+        $organization = $this->getOrganization();
         $project = $this->Projects->get($id, contain: ['Teams']);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $project = $this->Projects->patchEntity($project, $this->request->getData());
@@ -81,15 +81,13 @@ class ProjectsController extends AppController
             if ($this->Projects->save($project)) {
                 $this->Flash->success(__('The project has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'index', 'orgslug' => $organization->slug]);
             }
             $this->Flash->error(__('The project could not be saved. Please, try again.'));
         }
-        $organizations = $this->Projects->Organizations->find('list', limit: 200);
-        $organizations = $this->Authorization->applyScope($organizations, 'index');
         $teams = $this->Projects->Teams->find('list', limit: 200);
         $teams = $this->Authorization->applyScope($teams, 'index');
-        $this->set(compact('project', 'organizations', 'teams'));
+        $this->set(compact('project', 'organization', 'teams'));
     }
 
     /**
@@ -101,6 +99,7 @@ class ProjectsController extends AppController
      */
     public function delete($id = null)
     {
+        $organization = $this->getOrganization();
         $this->request->allowMethod(['post', 'delete']);
         $project = $this->Projects->get($id);
         $this->Authorization->authorize($project);
@@ -110,6 +109,6 @@ class ProjectsController extends AppController
             $this->Flash->error(__('The project could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect(['action' => 'index', 'orgslug' => $organization->slug]);
     }
 }

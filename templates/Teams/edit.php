@@ -2,7 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Team $team
- * @var string[]|\Cake\Collection\CollectionInterface $organizations
+ * @var \App\Model\Entity\Organization $organization
  * @var string[]|\Cake\Collection\CollectionInterface $projects
  * @var \Cake\Collection\CollectionInterface|string[] $members
  */
@@ -13,10 +13,10 @@
             <h4 class="heading"><?= __('Actions') ?></h4>
             <?= $this->Form->postLink(
                 __('Delete'),
-                ['action' => 'delete', $team->id],
+                ['action' => 'delete', 'orgslug' => $organization->slug, $team->id],
                 ['confirm' => __('Are you sure you want to delete # {0}?', $team->id), 'class' => 'side-nav-item']
             ) ?>
-            <?= $this->Html->link(__('List Teams'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
+            <?= $this->Html->link(__('List Teams'), ['action' => 'index', 'orgslug' => $organization->slug], ['class' => 'side-nav-item']) ?>
         </div>
     </aside>
     <div class="column column-80">
