@@ -11,7 +11,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $organization_id
  * @property int $user_id
- * @property string $role
+ * @property \App\Model\Enum\MemberRoleEnum $role
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
  *

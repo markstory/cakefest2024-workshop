@@ -56,7 +56,7 @@
                         <?php foreach ($organizationMember->organization_invites as $organizationInvite) : ?>
                         <tr>
                             <td><?= h($organizationInvite->email) ?></td>
-                            <td><?= h($organizationInvite->role) ?></td>
+                            <td><?= h($organizationInvite->role->value) ?></td>
                             <td><?= h($organizationInvite->organization_member_id) ?></td>
                             <td><?= h($organizationInvite->created) ?></td>
                             <td><?= h($organizationInvite->modified) ?></td>
