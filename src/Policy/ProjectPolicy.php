@@ -11,11 +11,6 @@ use Authorization\IdentityInterface;
  */
 class ProjectPolicy
 {
-    protected function isOrgMember(IdentityInterface $user, Project $project): bool
-    {
-        return in_array($project->organization_id, $user->member_organization_ids);
-    }
-
     /**
      * Check if $user can add Project
      *
@@ -25,7 +20,7 @@ class ProjectPolicy
      */
     public function canAdd(IdentityInterface $user, Project $project)
     {
-        return $this->isOrgMember($user, $project);
+        return $user->isMember($project->organization_id);
     }
 
     /**
@@ -37,7 +32,8 @@ class ProjectPolicy
      */
     public function canEdit(IdentityInterface $user, Project $project)
     {
-        return $this->isOrgMember($user, $project);
+        // TODO add team conditions
+        return $user->isManager($project->organization_id);
     }
 
     /**
@@ -49,7 +45,7 @@ class ProjectPolicy
      */
     public function canDelete(IdentityInterface $user, Project $project)
     {
-        return $this->isOrgMember($user, $project);
+        return $user->isManager($project->organization_id);
     }
 
     /**
@@ -61,6 +57,6 @@ class ProjectPolicy
      */
     public function canView(IdentityInterface $user, Project $project)
     {
-        return $this->isOrgMember($user, $project);
+        return $user->isMember($project->organization_id);
     }
 }

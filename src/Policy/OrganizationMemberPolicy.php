@@ -11,11 +11,6 @@ use Authorization\IdentityInterface;
  */
 class OrganizationMemberPolicy
 {
-    protected function isOrgMember(IdentityInterface $user, OrganizationMember $member): bool
-    {
-        return in_array($member->organization_id, $user->member_organization_ids);
-    }
-
     /**
      * Check if $user can add OrganizationMember
      *
@@ -25,7 +20,7 @@ class OrganizationMemberPolicy
      */
     public function canAdd(IdentityInterface $user, OrganizationMember $organizationMember)
     {
-        return $this->isOrgMember($user, $organizationMember);
+        return $user->isOwner($user, $organizationMember->organization_id);
     }
 
     /**
@@ -37,8 +32,7 @@ class OrganizationMemberPolicy
      */
     public function canEdit(IdentityInterface $user, OrganizationMember $organizationMember)
     {
-        // TODO role requirements
-        return $this->isOrgMember($user, $organizationMember);
+        return $user->isOwner($organizationMember->organization_id);
     }
 
     /**
@@ -50,8 +44,7 @@ class OrganizationMemberPolicy
      */
     public function canDelete(IdentityInterface $user, OrganizationMember $organizationMember)
     {
-        // TODO role requirements
-        return $this->isOrgMember($user, $organizationMember);
+        return $user->isOwner($organizationMember->organization_id);
     }
 
     /**
@@ -63,6 +56,6 @@ class OrganizationMemberPolicy
      */
     public function canView(IdentityInterface $user, OrganizationMember $organizationMember)
     {
-        return $this->isOrgMember($user, $organizationMember);
+        return $user->isMember($organizationMember->organization_id);
     }
 }

@@ -20,7 +20,7 @@ class OrganizationInvitePolicy
      */
     public function canAdd(IdentityInterface $user, OrganizationInvite $organizationInvite)
     {
-        return in_array($organizationInvite->organization_id, $user->member_organization_ids, true);
+        return $user->isOwner($organizationInvite->organization_id);
     }
 
     /**
@@ -32,7 +32,7 @@ class OrganizationInvitePolicy
      */
     public function canEdit(IdentityInterface $user, OrganizationInvite $organizationInvite)
     {
-        return in_array($organizationInvite->organization_id, $user->member_organization_ids, true);
+        return $user->isOwner($organizationInvite->organization_id);
     }
 
     /**
@@ -44,7 +44,7 @@ class OrganizationInvitePolicy
      */
     public function canDelete(IdentityInterface $user, OrganizationInvite $organizationInvite)
     {
-        return in_array($organizationInvite->organization_id, $user->member_organization_ids, true);
+        return $user->isOwner($organizationInvite->organization_id);
     }
 
     /**
@@ -56,7 +56,7 @@ class OrganizationInvitePolicy
      */
     public function canView(IdentityInterface $user, OrganizationInvite $organizationInvite)
     {
-        return in_array($organizationInvite->organization_id, $user->member_organization_ids, true);
+        return $user->isMember($organizationInvite->organization_id);
     }
 
     /**

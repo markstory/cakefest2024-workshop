@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
+use App\Model\Enum\MemberRoleEnum;
 use Authentication\PasswordHasher\DefaultPasswordHasher;
 use Cake\Core\Configure;
 use Cake\ORM\Entity;
@@ -141,5 +142,46 @@ class User extends Entity
         }
 
         return $data;
+    }
+
+    /**
+     * Check if the current user has membership in the provided orgId.
+     */
+    public function isMember(int $organizationId): bool
+    {
+        return in_array($organizationId, $this->member_organization_ids);
+    }
+
+    /**
+     * Check if the current user has an owner role in the provided orgId.
+     */
+    public function isOwner(int $organizationId): bool
+    {
+        return $this->isRole($organizationId, MemberRoleEnum::Owner);
+    }
+
+    /**
+     * Check if the current user has an owner role in the provided orgId.
+     */
+    public function isManager(int $organizationId): bool
+    {
+        return $this->isRole($organizationId, MemberRoleEnum::Manager);
+    }
+
+    /**
+     * Check if the current user has an owner role in the provided orgId.
+     */
+    protected function isRole(int $organizationId, MemberRoleEnum $role): bool
+    {
+        // TODO this is O(n) it could be O(1)
+        foreach ($this->organization_memberships as $membership) {
+            if ($membership->organization_id !== $organizationId) {
+                continue;
+            }
+
+            return $membership->role === $role;
+        }
+
+        return false;
     }
 }

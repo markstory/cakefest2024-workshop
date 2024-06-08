@@ -11,11 +11,6 @@ use Authorization\IdentityInterface;
  */
 class TeamPolicy
 {
-    protected function isOrgMember(IdentityInterface $user, Team $team): bool
-    {
-        return in_array($team->organization_id, $user->member_organization_ids);
-    }
-
     /**
      * Check if $user can add Team
      *
@@ -25,7 +20,7 @@ class TeamPolicy
      */
     public function canAdd(IdentityInterface $user, Team $team)
     {
-        return $this->isOrgMember($user, $team);
+        return $user->isMember($team->organization_id);
     }
 
     /**
@@ -37,7 +32,7 @@ class TeamPolicy
      */
     public function canEdit(IdentityInterface $user, Team $team)
     {
-        return $this->isOrgMember($user, $team);
+        return $user->isManager($team->organization_id);
     }
 
     /**
@@ -49,7 +44,7 @@ class TeamPolicy
      */
     public function canDelete(IdentityInterface $user, Team $team)
     {
-        return $this->isOrgMember($user, $team);
+        return $user->isManager($team->organization_id);
     }
 
     /**
@@ -61,6 +56,6 @@ class TeamPolicy
      */
     public function canView(IdentityInterface $user, Team $team)
     {
-        return $this->isOrgMember($user, $team);
+        return $user->isMember($team->organization_id);
     }
 }

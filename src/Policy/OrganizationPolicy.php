@@ -33,7 +33,7 @@ class OrganizationPolicy
      */
     public function canEdit(IdentityInterface $user, Organization $organization)
     {
-        return in_array($organization->id, $user->member_organization_ids, true);
+        return $user->isOwner($organization->id);
     }
 
     /**
@@ -45,7 +45,7 @@ class OrganizationPolicy
      */
     public function canDelete(IdentityInterface $user, Organization $organization)
     {
-        return in_array($organization->id, $user->member_organization_ids, true);
+        return $this->canEdit($user, $organization);
     }
 
     /**
@@ -57,6 +57,6 @@ class OrganizationPolicy
      */
     public function canView(IdentityInterface $user, Organization $organization)
     {
-        return in_array($organization->id, $user->member_organization_ids, true);
+        return $user->isMember($organization->id);
     }
 }
