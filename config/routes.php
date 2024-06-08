@@ -89,7 +89,6 @@ return function (RouteBuilder $routes): void {
             $builder->connect('/delete/*', 'TeamMembers::delete', ['_name' => 'teammembers:delete']);
         });
 
-
         $builder->scope('/users', ['controller' => 'Users'], function (RouteBuilder $builder): void {
             $builder->connect('/view/*', 'Users::view', ['_name' => 'users:view']);
             $builder->connect('/edit/*', 'Users::edit', ['_name' => 'users:edit']);
