@@ -53,6 +53,7 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/login', 'Users::login', ['_name' => 'users:login']);
 
         $builder->connect('/orgs/', 'Organizations::index', ['_name' => 'orgs:index']);
+        $builder->connect('/orgs/add', 'Organizations::add', ['_name' => 'orgs:add']);
 
         $builder->scope('/orgs/{orgslug}', function (RouteBuilder $builder): void {
             $builder->connect('/', 'Organizations::view', ['_name' => 'orgs:view']);
@@ -93,6 +94,7 @@ return function (RouteBuilder $routes): void {
             $builder->connect('/view/*', 'Users::view', ['_name' => 'users:view']);
             $builder->connect('/edit/*', 'Users::edit', ['_name' => 'users:edit']);
         });
+        $builder->connect('/users/memberships', 'OrganizationMembers::index', ['_name' => 'users:memberships']);
 
         /*
          * Here, we are connecting '/' (base path) to a controller called 'Pages',
