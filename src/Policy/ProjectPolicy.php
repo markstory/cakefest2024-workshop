@@ -32,8 +32,11 @@ class ProjectPolicy
      */
     public function canEdit(IdentityInterface $user, Project $project)
     {
-        // TODO add team conditions
-        return $user->isManager($project->organization_id);
+        $isOwner = $user->isOwner($project->organization_id);
+        $isManager = $user->isManager($project->organization_id);
+        $isTeamMember = $user->isProjectMember($project);
+
+        return $isOwner || ($isTeamMember && $isManager);
     }
 
     /**
@@ -45,7 +48,11 @@ class ProjectPolicy
      */
     public function canDelete(IdentityInterface $user, Project $project)
     {
-        return $user->isManager($project->organization_id);
+        $isOwner = $user->isOwner($project->organization_id);
+        $isManager = $user->isManager($project->organization_id);
+        $isTeamMember = $user->isProjectMember($project);
+
+        return $isOwner || ($isTeamMember && $isManager);
     }
 
     /**

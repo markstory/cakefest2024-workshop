@@ -32,7 +32,11 @@ class TeamPolicy
      */
     public function canEdit(IdentityInterface $user, Team $team)
     {
-        return $user->isManager($team->organization_id);
+        $isOwner = $user->isOwner($team->organization_id);
+        $isManager = $user->isManager($team->organization_id);
+        $isTeamMember = $user->isTeamMember($team);
+
+        return $isOwner || ($isManager && $isTeamMember);
     }
 
     /**
@@ -44,7 +48,11 @@ class TeamPolicy
      */
     public function canDelete(IdentityInterface $user, Team $team)
     {
-        return $user->isManager($team->organization_id);
+        $isOwner = $user->isOwner($team->organization_id);
+        $isManager = $user->isManager($team->organization_id);
+        $isTeamMember = $user->isTeamMember($team);
+
+        return $isOwner || ($isManager && $isTeamMember);
     }
 
     /**

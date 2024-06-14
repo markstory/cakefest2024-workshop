@@ -106,6 +106,9 @@ class UsersTable extends Table
 
     public function findLogin(SelectQuery $query): SelectQuery
     {
-        return $query->contain('OrganizationMembers');
+        return $query->contain([
+            'OrganizationMembers',
+            'OrganizationMembers.TeamMembers',
+        ]);
     }
 }

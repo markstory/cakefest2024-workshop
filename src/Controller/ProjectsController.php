@@ -101,7 +101,7 @@ class ProjectsController extends AppController
     {
         $organization = $this->getOrganization();
         $this->request->allowMethod(['post', 'delete']);
-        $project = $this->Projects->get($id);
+        $project = $this->Projects->get($id, contain: ['Teams']);
         $this->Authorization->authorize($project);
         if ($this->Projects->delete($project)) {
             $this->Flash->success(__('The project has been deleted.'));
