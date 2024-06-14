@@ -51,6 +51,7 @@ return function (RouteBuilder $routes): void {
 
     $routes->scope('/', function (RouteBuilder $builder): void {
         $builder->connect('/login', 'Users::login', ['_name' => 'users:login']);
+        $builder->connect('/logout', 'Users::logout', ['_name' => 'users:logout']);
 
         $builder->connect('/orgs/', 'Organizations::index', ['_name' => 'orgs:index']);
         $builder->connect('/orgs/add', 'Organizations::add', ['_name' => 'orgs:add']);
