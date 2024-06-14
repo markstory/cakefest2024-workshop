@@ -12,6 +12,7 @@ use Authorization\IdentityInterface as AuthorizationIdentity;
 use Authorization\Policy\ResultInterface;
 use Cake\Core\Configure;
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 use DateTime;
 use InvalidArgumentException;
 use RuntimeException;
@@ -63,6 +64,11 @@ class User extends Entity implements AuthenticationIdentity, AuthorizationIdenti
      * @var \Authorization\AuthorizationServiceInterface|null
      */
     protected ?AuthorizationServiceInterface $authorization = null;
+
+    /**
+     * @var array<int, \App\Model\Entity\OrganizationMembership>
+     */
+    protected ?array $membershipMap;
 
     protected function _getAvatarHash()
     {
@@ -241,20 +247,35 @@ class User extends Entity implements AuthenticationIdentity, AuthorizationIdenti
     }
 
     /**
+     * Get an organization from a membership map.
+     *
+     * @param int $organizationId the organization to fetch membership for.
+     */
+    protected function getMembership(int $organizationId): ?OrganizationMember
+    {
+        if (
+            empty($this->membershipMap) ||
+            count($this->membershipMap) != count($this->organization_members)
+        ) {
+            foreach ($this->organization_members as $member) {
+                $this->membershipMap[$member->organization_id] = $member;
+            }
+        }
+
+        return $this->membershipMap[$organizationId] ?? null;
+    }
+
+    /**
      * Check if the current user has an owner role in the provided orgId.
      */
     protected function isRole(int $organizationId, MemberRoleEnum $role): bool
     {
-        // TODO this is O(n) it could be O(1)
-        foreach ($this->organization_members as $membership) {
-            if ($membership->organization_id !== $organizationId) {
-                continue;
-            }
-
-            return $membership->role === $role;
+        $membership = $this->getMembership($organizationId);
+        if (!$membership) {
+            return false;
         }
 
-        return false;
+        return $membership->role === $role;
     }
 
     /**
@@ -268,27 +289,22 @@ class User extends Entity implements AuthenticationIdentity, AuthorizationIdenti
         if (empty($project->teams)) {
             throw new InvalidArgumentException('Missing required association `Teams`. Add or update your contain()');
         }
-        $projectTeamIds = array_map(fn ($item) => $item->id, $project->teams);
-        $organizationId = $project->organization_id;
-        foreach ($this->organization_members as $membership) {
-            if ($membership->organization_id !== $organizationId) {
-                continue;
-            }
-
-            if (empty($membership->teams)) {
-                throw new InvalidArgumentException(
-                    "Membership id={$membership->id} was not loaded with its `Teams` association. " .
-                    'Add or update your contain().'
-                );
-            }
-
-            $memberTeamIds = array_map(fn ($item) => $item->id, $membership->teams);
-            $overlap = array_intersect($memberTeamIds, $projectTeamIds);
-
-            return count($overlap) > 0;
+        $membership = $this->getMembership($project->organization_id);
+        if (!$membership) {
+            return false;
         }
 
-        return false;
+        if (empty($membership->teams)) {
+            throw new InvalidArgumentException(
+                "Membership id={$membership->id} was not loaded with its `Teams` association. " .
+                'Add or update your contain().'
+            );
+        }
+        $memberTeamIds = array_map(fn ($item) => $item->id, $membership->teams);
+        $projectTeamIds = array_map(fn ($item) => $item->id, $project->teams);
+        $overlap = array_intersect($memberTeamIds, $projectTeamIds);
+
+        return count($overlap) > 0;
     }
 
     /**
@@ -298,22 +314,32 @@ class User extends Entity implements AuthenticationIdentity, AuthorizationIdenti
      */
     public function isTeamMember(Team $team): bool
     {
-        $organizationId = $team->organization_id;
-        foreach ($this->organization_memberships as $membership) {
-            if ($membership->organization_id !== $organizationId) {
-                continue;
+        $membership = $this->getMembership($team->organization_id);
+        if (!$membership) {
+            return false;
+        }
+        if (empty($membership->team_members)) {
+            $teamsMembers = TableRegistry::getTableLocator()->get('TeamMembers');
+            $teamMemberList = $teamsMembers->find()->where(['organization_member_id' => $membership->id])->all();
+
+            $membership->team_members = $teamMemberList;
+        }
+        $memberTeamIds = array_map(fn ($item) => $item->team_id, $membership->team_members);
+
+        return in_array($team->id, $memberTeamIds, true);
+    }
+
+    /**
+     * Check if the current user belongs to the provided team.
+     *
+     * We could change that access in the future.
+     */
+    public function isTeamMemberOf(array $teams): bool
+    {
+        foreach ($teams as $team) {
+            if ($this->isTeamMember($team)) {
+                return true;
             }
-
-            if (empty($membership->teams)) {
-                throw new InvalidArgumentException(
-                    "Membership id={$membership->id} was not loaded with its `Teams` association. " .
-                    'Add or update your contain().'
-                );
-            }
-
-            $memberTeamIds = array_map(fn ($item) => $item->id, $membership->teams);
-
-            return in_array($team->id, $memberTeamIds, true);
         }
 
         return false;

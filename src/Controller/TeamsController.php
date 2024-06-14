@@ -64,7 +64,11 @@ class TeamsController extends AppController
         }
         $projects = $this->Teams->Projects->find('list', limit: 200);
         $projects = $this->Authorization->applyScope($projects, 'index');
-        $members = $this->Teams->OrganizationMembers->find('list', limit: 200);
+        $members = $this->Teams->OrganizationMembers->find(
+            'list',
+            valueField: 'user.name',
+            limit: 200
+        )->contain('Users');
         $members = $this->Authorization->applyScope($members, 'index');
         $this->set(compact('team', 'organization', 'projects', 'members'));
     }
@@ -93,7 +97,12 @@ class TeamsController extends AppController
         $projects = $this->Teams->Projects->find('list', limit: 200);
         $projects = $this->Authorization->applyScope($projects, 'index');
 
-        $members = $this->Teams->OrganizationMembers->find('list', limit: 200);
+        $members = $this->Teams->OrganizationMembers->find(
+            'list',
+            valueField: 'user.name',
+            limit: 200
+        )->contain('Users');
+
         $members = $this->Authorization->applyScope($members, 'index');
         $this->set(compact('team', 'organization', 'projects', 'members'));
     }
