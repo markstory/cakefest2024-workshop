@@ -57,9 +57,9 @@
                             <td><?= h($organizationMember->created) ?></td>
                             <td><?= h($organizationMember->modified) ?></td>
                             <td class="actions">
-                                <?= $this->Html->link(__('View'), ['controller' => 'OrganizationMembers', 'action' => 'view', $organizationMember->id]) ?>
-                                <?= $this->Html->link(__('Edit'), ['controller' => 'OrganizationMembers', 'action' => 'edit', $organizationMember->id]) ?>
-                                <?= $this->Form->postLink(__('Delete'), ['controller' => 'OrganizationMembers', 'action' => 'delete', $organizationMember->id], ['confirm' => __('Are you sure you want to delete # {0}?', $organizationMember->id)]) ?>
+                                <?= $this->Html->link(__('View'), ['controller' => 'Organizations', 'action' => 'view', 'orgslug' => $organizationMember->organization->slug]) ?>
+                                <?= $this->Html->link(__('Edit'), ['controller' => 'OrganizationMembers', 'action' => 'edit', 'orgslug' => $organizationMember->organization->slug, $organizationMember->id]) ?>
+                                <?= $this->Form->postLink(__('Delete'), ['controller' => 'OrganizationMembers', 'action' => 'delete', 'orgslug' => $organizationMember->organization->slug, $organizationMember->id], ['confirm' => __('Are you sure you want to delete # {0}?', $organizationMember->id)]) ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>
