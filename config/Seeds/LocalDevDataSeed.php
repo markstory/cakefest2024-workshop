@@ -37,6 +37,12 @@ class LocalDevDataSeed extends AbstractSeed
                 'email_verified' => 1,
             ],
             [
+                'email' => 'manager@example.com',
+                'password' => $hasher->hash('cakefest'),
+                'name' => $faker->name(),
+                'email_verified' => 1,
+            ],
+            [
                 'email' => 'member@example.com',
                 'password' => $hasher->hash('cakefest'),
                 'name' => $faker->name(),
@@ -49,6 +55,7 @@ class LocalDevDataSeed extends AbstractSeed
 
         $users = $this->fetchTable('Users');
         $owner = $users->findByEmail('owner@example.com')->firstOrFail();
+        $manager = $users->findByEmail('manager@example.com')->firstOrFail();
         $member = $users->findByEmail('member@example.com')->firstOrFail();
 
         $organizations = $this->fetchTable('Organizations');
@@ -66,6 +73,10 @@ class LocalDevDataSeed extends AbstractSeed
             $organizations->OrganizationMembers->newEntity([
                 'user_id' => $owner->id,
                 'role' => MemberRoleEnum::Owner,
+            ]),
+            $organizations->OrganizationMembers->newEntity([
+                'user_id' => $manager->id,
+                'role' => MemberRoleEnum::Manager,
             ]),
             $organizations->OrganizationMembers->newEntity([
                 'user_id' => $member->id,
