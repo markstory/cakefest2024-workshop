@@ -246,7 +246,7 @@ class User extends Entity implements AuthenticationIdentity, AuthorizationIdenti
     protected function isRole(int $organizationId, MemberRoleEnum $role): bool
     {
         // TODO this is O(n) it could be O(1)
-        foreach ($this->organization_memberships as $membership) {
+        foreach ($this->organization_members as $membership) {
             if ($membership->organization_id !== $organizationId) {
                 continue;
             }
@@ -270,7 +270,7 @@ class User extends Entity implements AuthenticationIdentity, AuthorizationIdenti
         }
         $projectTeamIds = array_map(fn ($item) => $item->id, $project->teams);
         $organizationId = $project->organization_id;
-        foreach ($this->organization_memberships as $membership) {
+        foreach ($this->organization_members as $membership) {
             if ($membership->organization_id !== $organizationId) {
                 continue;
             }
