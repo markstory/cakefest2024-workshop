@@ -21,8 +21,9 @@ class TeamsController extends AppController
         $query = $this->Teams->findByOrganizationId($organization->id);
         $query = $this->Authorization->applyScope($query);
         $teams = $this->paginate($query);
+        $user = $this->request->getAttribute('identity');
 
-        $this->set(compact('teams', 'organization'));
+        $this->set(compact('user', 'teams', 'organization'));
     }
 
     /**

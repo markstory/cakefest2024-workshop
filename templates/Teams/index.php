@@ -1,6 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var \App\Model\Entity\User $user
  * @var iterable<\App\Model\Entity\Team> $teams
  */
 $this->Paginator->options(['url' => ['orgslug' => $organization->slug]]);
@@ -26,7 +27,9 @@ $this->Paginator->options(['url' => ['orgslug' => $organization->slug]]);
                     <td><?= h($team->modified) ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', 'orgslug' => $organization->slug,  $team->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit',  'orgslug' => $organization->slug, $team->id]) ?>
+                        <?php if ($user->can('edit', $team)) : ?>
+                            <?= $this->Html->link(__('Edit'), ['action' => 'edit',  'orgslug' => $organization->slug, $team->id]) ?>
+                        <?php endif; ?>
                         <?= $this->Form->postLink(__('Delete'), ['action' => 'delete',  'orgslug' => $organization->slug, $team->id], ['confirm' => __('Are you sure you want to delete # {0}?', $team->id)]) ?>
                     </td>
                 </tr>
