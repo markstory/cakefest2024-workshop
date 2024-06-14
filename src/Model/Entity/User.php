@@ -4,7 +4,12 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use App\Model\Enum\MemberRoleEnum;
+use ArrayAccess;
+use Authentication\IdentityInterface as AuthenticationIdentity;
 use Authentication\PasswordHasher\DefaultPasswordHasher;
+use Authorization\AuthorizationServiceInterface;
+use Authorization\IdentityInterface as AuthorizationIdentity;
+use Authorization\Policy\ResultInterface;
 use Cake\Core\Configure;
 use Cake\ORM\Entity;
 use DateTime;
@@ -26,7 +31,7 @@ use RuntimeException;
  * @property \App\Model\Entity\OrganizationMember[] $organization_members
  * @property \App\Model\Entity\UserEmail[] $user_emails
  */
-class User extends Entity
+class User extends Entity implements AuthenticationIdentity, AuthorizationIdentity
 {
     public const PASSWORD_TOKEN_DURATION = '+4 hours';
 
@@ -53,6 +58,11 @@ class User extends Entity
         'password',
         'email_verified',
     ];
+
+    /**
+     * @var \Authorization\AuthorizationServiceInterface|null
+     */
+    protected ?AuthorizationServiceInterface $authorization = null;
 
     protected function _getAvatarHash()
     {
@@ -145,6 +155,68 @@ class User extends Entity
     }
 
     /**
+     * Authorization\IdentityInterface method
+     */
+    public function getIdentifier(): int
+    {
+        return $this->get('id');
+    }
+
+    /**
+     * Authorization\IdentityInterface method
+     */
+    public function can($action, $resource): bool
+    {
+        if (!$this->authorization) {
+            throw new RuntimeException('Cannot check authorization. AuthorizationService has not been set.');
+        }
+
+        return $this->authorization->can($this, $action, $resource);
+    }
+
+    /**
+     * Authorization\IdentityInterface method
+     */
+    public function canResult($action, $resource): ResultInterface
+    {
+        if (!$this->authorization) {
+            throw new RuntimeException('Cannot check authorization. AuthorizationService has not been set.');
+        }
+
+        return $this->authorization->canResult($this, $action, $resource);
+    }
+
+    /**
+     * Authorization\IdentityInterface method
+     */
+    public function applyScope(string $action, mixed $resource, mixed ...$optionalArgs): mixed
+    {
+        if (!$this->authorization) {
+            throw new RuntimeException('Cannot check authorization. AuthorizationService has not been set.');
+        }
+
+        return $this->authorization->applyScope($this, $action, $resource);
+    }
+
+    /**
+     * Authorization\IdentityInterface method
+     */
+    public function getOriginalData(): ArrayAccess|array
+    {
+        return $this;
+    }
+
+    /**
+     * Setter to be used by the middleware.
+     */
+    public function setAuthorization(AuthorizationServiceInterface $service)
+    {
+        $this->authorization = $service;
+
+        return $this;
+    }
+
+    /**
      * Check if the current user has membership in the provided orgId.
      */
     public function isMember(int $organizationId): bool
@@ -180,6 +252,68 @@ class User extends Entity
             }
 
             return $membership->role === $role;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the current user has any overlap in teams with the project.
+     * Teams that are assigned to a project have read and write access to that project.
+     *
+     * We could change that access in the future.
+     */
+    public function isProjectMember(Project $project): bool
+    {
+        if (empty($project->teams)) {
+            throw new InvalidArgumentException('Missing required association `Teams`. Add or update your contain()');
+        }
+        $projectTeamIds = array_map(fn ($item) => $item->id, $project->teams);
+        $organizationId = $project->organization_id;
+        foreach ($this->organization_memberships as $membership) {
+            if ($membership->organization_id !== $organizationId) {
+                continue;
+            }
+
+            if (empty($membership->teams)) {
+                throw new InvalidArgumentException(
+                    "Membership id={$membership->id} was not loaded with its `Teams` association. " .
+                    'Add or update your contain().'
+                );
+            }
+
+            $memberTeamIds = array_map(fn ($item) => $item->id, $membership->teams);
+            $overlap = array_intersect($memberTeamIds, $projectTeamIds);
+
+            return count($overlap) > 0;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the current user belongs to the provided team.
+     *
+     * We could change that access in the future.
+     */
+    public function isTeamMember(Team $team): bool
+    {
+        $organizationId = $team->organization_id;
+        foreach ($this->organization_memberships as $membership) {
+            if ($membership->organization_id !== $organizationId) {
+                continue;
+            }
+
+            if (empty($membership->teams)) {
+                throw new InvalidArgumentException(
+                    "Membership id={$membership->id} was not loaded with its `Teams` association. " .
+                    'Add or update your contain().'
+                );
+            }
+
+            $memberTeamIds = array_map(fn ($item) => $item->id, $membership->teams);
+
+            return in_array($team->id, $memberTeamIds, true);
         }
 
         return false;

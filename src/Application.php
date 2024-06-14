@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App;
 
+use App\Model\Entity\User;
 use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
@@ -107,7 +108,11 @@ class Application extends BaseApplication implements
                 'httponly' => true,
             ]))
             ->add(new AuthenticationMiddleware($this))
-            ->add(new AuthorizationMiddleware($this));
+            ->add(new AuthorizationMiddleware($this, [
+                'identityDecorator' => function ($auth, User $user) {
+                    return $user->setAuthorization($auth);
+                },
+            ]));
 
         return $middlewareQueue;
     }
