@@ -17,6 +17,11 @@
         </div>
     </aside>
     <div class="column column-80">
+        <?php if ($vip) : ?>
+            <div class="warning">
+            You are a VIP, get some good stuff!
+            </div>
+        <?php endif; ?>
         <div class="organizations view content">
             <h3><?= h($organization->name) ?></h3>
             <table>

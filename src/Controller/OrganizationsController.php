@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Features\FeatureManager;
+
 /**
  * Organizations Controller
  *
@@ -30,14 +32,16 @@ class OrganizationsController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view()
+    public function view(FeatureManager $features)
     {
         $organization = $this->Organizations
             ->findBySlug($this->request->getParam('orgslug'))
             ->contain(['OrganizationInvites', 'OrganizationMembers.Users', 'OrganizationOptions', 'Projects', 'Teams'])
             ->firstOrFail();
+        $vip = $features->has('organizations:vip', ['organization' => $organization]);
+
         $this->Authorization->authorize($organization);
-        $this->set(compact('organization'));
+        $this->set(compact('organization', 'vip'));
     }
 
     /**
