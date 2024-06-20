@@ -30,7 +30,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Features\\": "plugins/Features/src/"
         }
     },
     "autoload-dev": {
