@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 return [
     'Features' => [
-        'organzations:tasks' => [
+        'organzations:vip' => [
             'segments' => [
                 [
                     'name' => 'vip',
@@ -14,7 +14,7 @@ return [
                             'value' => ['acme'],
                         ],
                     ],
-                    'rollout' => 100,
+                    'rollout' => 5,
                 ],
             ],
         ],

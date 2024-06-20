@@ -15,7 +15,7 @@ class Segment
         protected string $name,
         protected array $conditions,
         protected float|null $rollout,
-    ): void {
+    ) {
     }
 
     public function match(FeatureContext $context): bool
@@ -25,12 +25,13 @@ class Segment
                 return false;
             }
         }
+        if ($this->rollout === 0.0) {
+            return false;
+        }
         if ($this->rollout != null) {
             $contextId = $context->getId();
-            // TODO this is likely wrong
-            if ($contextId % 1000 <= $this->rollout) {
-                return false;
-            }
+
+            return $contextId % 100 <= $this->rollout;
         }
 
         return true;

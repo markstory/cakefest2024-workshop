@@ -14,7 +14,7 @@ class Feature
     public function __construct(
         protected string $name,
         protected array $segments = [],
-    ): void {
+    ) {
     }
 
     /**
@@ -23,7 +23,7 @@ class Feature
      * @param \Feature\FeatureContext $context
      * @return bool
      */
-    public function has(FeatureContext $context): bool
+    public function match(FeatureContext $context): bool
     {
         foreach ($this->segments as $segment) {
             if ($segment->match($context)) {

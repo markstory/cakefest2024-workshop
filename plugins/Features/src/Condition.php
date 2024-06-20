@@ -16,7 +16,7 @@ class Condition
         protected string $property,
         protected string $op,
         protected string|array|int|float|bool $value,
-    ): void {
+    ) {
     }
 
     public function match(FeatureContext $context): bool

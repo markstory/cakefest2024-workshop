@@ -12,7 +12,7 @@ class FeatureContext
      */
     public function __construct(
         protected array $data,
-    ): void {
+    ) {
     }
 
     public function get(string $key): mixed
@@ -29,10 +29,10 @@ class FeatureContext
         return array_key_exists($key, $this->data);
     }
 
-    public function getId(): string
+    public function getId(): int
     {
         $string = json_encode($this->data);
 
-        return sha1($string);
+        return intval(sha1($string), 16);
     }
 }

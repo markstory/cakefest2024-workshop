@@ -38,6 +38,8 @@ use Cake\Http\MiddlewareQueue;
 use Cake\ORM\Locator\TableLocator;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Features\FeatureContext;
+use Features\FeatureManager;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -126,6 +128,21 @@ class Application extends BaseApplication implements
      */
     public function services(ContainerInterface $container): void
     {
+        $container->addShared(FeatureManager::class, function () {
+            return new FeatureManager(
+                function (array $data) {
+                    $context = [];
+                    if (isset($data['organization'])) {
+                        $context['organization_id'] = $data['organization']->id;
+                        $context['organization_slug'] = $data['organization']->slug;
+                    }
+                    // TODO add user context
+
+                    return new FeatureContext($context);
+                },
+                Configure::read('Features')
+            );
+        });
     }
 
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
