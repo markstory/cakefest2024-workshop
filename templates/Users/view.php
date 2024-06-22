@@ -6,7 +6,7 @@
 ?>
 <div class="row">
     <aside class="column">
-        <div class="side-nav">
+        <div class="side-nav" hx-boost="true">
             <h4 class="heading"><?= __('Actions') ?></h4>
             <?= $this->Html->link(__('Edit User'), ['action' => 'edit', $user->id], ['class' => 'side-nav-item']) ?>
             <?= $this->Html->link(__('Organizations'), ['controller' => 'Organizations', 'action' => 'index'], ['class' => 'side-nav-item']) ?>

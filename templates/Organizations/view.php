@@ -6,7 +6,7 @@
 ?>
 <div class="row">
     <aside class="column">
-        <div class="side-nav">
+        <div class="side-nav" hx-boost="true">
             <h4 class="heading"><?= __('Actions') ?></h4>
             <?= $this->Html->link(__('Edit Organization'), ['action' => 'edit', 'orgslug' => $organization->slug], ['class' => 'side-nav-item']) ?>
             <?= $this->Form->postLink(__('Delete Organization'), ['action' => 'delete', 'orgslug' => $organization->slug], ['confirm' => __('Are you sure you want to delete # {0}?', $organization->slug), 'class' => 'side-nav-item']) ?>

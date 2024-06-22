@@ -18,6 +18,7 @@ namespace App\Controller;
 
 use App\Model\Entity\Organization;
 use Cake\Controller\Controller;
+use Cake\Event\EventInterface;
 
 /**
  * Application Controller
@@ -53,6 +54,16 @@ class AppController extends Controller
         //$this->loadComponent('FormProtection');
         $this->loadComponent('Authorization.Authorization');
         $this->loadComponent('Authentication.Authentication');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function beforeRender(EventInterface $event)
+    {
+        if ($this->request->hasHeader('Hx-Boosted')) {
+            $this->viewBuilder()->setLayout('boost');
+        }
     }
 
     protected function getOrganization(): Organization
