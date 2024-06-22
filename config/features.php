@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 return [
     'Features' => [
-        'organzations:vip' => [
+        'organizations:vip' => [
             'segments' => [
                 [
                     'name' => 'vip',
