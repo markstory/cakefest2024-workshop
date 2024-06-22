@@ -23,7 +23,7 @@
         <a target="_blank" rel="noopener" href="https://api.cakephp.org/">API</a>
     </div>
 </nav>
-<main class="main">
+<main class="main" hx-boost="true">
     <div class="container">
         <?= $this->Flash->render() ?>
         <?= $this->fetch('content') ?>

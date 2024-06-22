@@ -3,6 +3,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Project $project
  */
+$orgViewUrl = ['_name' => 'orgs:view', 'orgslug' => $organization->slug]
 ?>
 <div class="row">
     <aside class="column">
@@ -21,6 +22,10 @@
                 <tr>
                     <th><?= __('Name') ?></th>
                     <td><?= h($project->name) ?></td>
+                </tr>
+                <tr>
+                    <th><?= __('Organization') ?></th>
+                    <td><?= $this->Html->link($organization->name, $orgViewUrl) ?></td>
                 </tr>
                 <tr>
                     <th><?= __('Created') ?></th>
