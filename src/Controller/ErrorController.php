@@ -46,10 +46,7 @@ class ErrorController extends AppController
     }
 
     /**
-     * beforeRender callback.
-     *
-     * @param \Cake\Event\EventInterface<\Cake\Controller\Controller> $event Event.
-     * @return \Cake\Http\Response|null|void
+     * @inheritDoc
      */
     public function beforeRender(EventInterface $event)
     {
