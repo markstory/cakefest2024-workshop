@@ -19,6 +19,7 @@ $target = ['_name' => 'teams:delete', 'orgslug' => $organization->slug, $team->i
         'class' => 'button button-muted',
         'data-testid' => 'confirm-cancel',
         'tabindex' => 0,
+        'autofocus' => 1,
     ]) ?>
     <?= $this->Form->button('Ok', [
         'type' => 'submit',
