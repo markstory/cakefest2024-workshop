@@ -68,6 +68,8 @@ return function (RouteBuilder $routes): void {
             $builder->connect('/add', 'Teams::add', ['_name' => 'teams:add']);
             $builder->connect('/edit/*', 'Teams::edit', ['_name' => 'teams:edit']);
             $builder->connect('/view/*', 'Teams::view', ['_name' => 'teams:view']);
+            $builder->get('/delete/{id}/confirm', 'Teams::deleteConfirm', 'teams:deleteconfirm')
+                ->setPass(['id']);
             $builder->connect('/delete/*', 'Teams::delete', ['_name' => 'teams:delete']);
         });
 

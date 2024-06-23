@@ -69,12 +69,14 @@ a:active {
 .side-nav a,
 .top-nav-links a,
 th a,
+.actions button,
 .actions a {
     color: var(--color-lightgray);
 }
 
 .side-nav a:hover,
 .side-nav a:focus,
+.actions button:hover,
 .actions a:hover,
 .actions a:focus {
     color: var(--color-links-active);
@@ -107,6 +109,14 @@ th a,
 .actions a:first-child {
     padding-left: 0;
 }
+.actions button {
+    border: none;
+    background: none;
+    padding: 0 0.4rem;
+    font-size: inherit;
+    text-transform: unset;
+}
+
 th {
     white-space: nowrap;
 }
