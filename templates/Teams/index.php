@@ -21,6 +21,9 @@ $this->Paginator->options(['url' => ['orgslug' => $organization->slug]]);
             </thead>
             <tbody>
                 <?php foreach ($teams as $team): ?>
+                <?php
+                $deleteConfirm = ['_name' => 'teams:deleteconfirm',  'orgslug' => $organization->slug, $team->id];
+                ?>
                 <tr>
                     <td><?= h($team->name) ?></td>
                     <td><?= h($team->created) ?></td>
@@ -30,7 +33,16 @@ $this->Paginator->options(['url' => ['orgslug' => $organization->slug]]);
                         <?php if ($user->can('edit', $team)) : ?>
                             <?= $this->Html->link(__('Edit'), ['action' => 'edit',  'orgslug' => $organization->slug, $team->id]) ?>
                         <?php endif; ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete',  'orgslug' => $organization->slug, $team->id], ['confirm' => __('Are you sure you want to delete # {0}?', $team->id)]) ?>
+
+                        <?= $this->Html->link(
+                        __('Delete'),
+                        $deleteConfirm,
+                        [
+                            'hx-get' => $this->Url->build($deleteConfirm),
+                            'hx-target' => 'body',
+                            'hx-swap' => 'beforeend',
+                        ]
+                        ) ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
