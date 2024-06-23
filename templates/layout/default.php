@@ -20,6 +20,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta id="csrf-token" name="csrf-token" content="<?= $this->request->getAttribute('csrfToken') ?>" />
     <title>
         <?= $cakeDescription ?>:
         <?= $this->fetch('title') ?>
@@ -31,9 +32,18 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+    <script type="text/javascript">
+    htmx.defineExtension('ajax-header', {
+      onEvent: function (name, evt) {
+        if (name === 'htmx:configRequest') {
+          evt.detail.headers['X-Csrf-Token'] = document.getElementById('csrf-token').getAttribute('content');
+        }
+      },
+    });
+    </script>
     <?= $this->fetch('script') ?>
 </head>
-<body>
+<body hx-ext="ajax-header">
     <?= $this->element('../layout/boost', $this->getVars()); ?>
 </body>
 </html>
