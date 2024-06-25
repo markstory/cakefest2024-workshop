@@ -19,32 +19,15 @@ $this->Paginator->options(['url' => ['orgslug' => $organization->slug]]);
                     <th class="actions"><?= __('Actions') ?></th>
                 </tr>
             </thead>
-            <tbody>
-                <?php foreach ($teams as $team): ?>
-                <?php
-                $deleteConfirm = ['_name' => 'teams:deleteconfirm',  'orgslug' => $organization->slug, $team->id];
-                ?>
-                <tr>
-                    <td><?= h($team->name) ?></td>
-                    <td><?= h($team->created) ?></td>
-                    <td><?= h($team->modified) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', 'orgslug' => $organization->slug,  $team->id]) ?>
-                        <?php if ($user->can('edit', $team)) : ?>
-                            <?= $this->Html->link(__('Edit'), ['action' => 'edit',  'orgslug' => $organization->slug, $team->id]) ?>
-                        <?php endif; ?>
-
-                        <?= $this->Html->link(
-                        __('Delete'),
-                        $deleteConfirm,
-                        [
-                            'hx-get' => $this->Url->build($deleteConfirm),
-                            'hx-target' => 'body',
-                            'hx-swap' => 'beforeend',
-                        ]
-                        ) ?>
-                    </td>
-                </tr>
+            <tbody hx-target="closest tr">
+                <?php foreach ($teams as $team) : ?>
+                    <tr>
+                    <?= $this->element('Teams/table_row', [
+                        'team' => $team,
+                        'organizations' => $organization,
+                        'user' => $user
+                    ]) ?>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
