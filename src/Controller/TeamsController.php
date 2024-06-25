@@ -108,6 +108,25 @@ class TeamsController extends AppController
         $this->set(compact('team', 'organization', 'projects', 'members'));
     }
 
+    public function inlineEdit($id = null)
+    {
+        $organization = $this->getOrganization();
+        $team = $this->Teams->get($id, contain: ['Projects']);
+        $this->Authorization->authorize($team, 'edit');
+        $user = $this->request->getAttribute('identity');
+
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $team = $this->Teams->patchEntity($team, $this->request->getData());
+            if ($this->Teams->save($team)) {
+                // Render the row
+                $this->set(compact('team', 'organization', 'user'));
+
+                return $this->render('inline_edit_complete');
+            }
+        }
+        $this->set(compact('team', 'organization', 'user'));
+    }
+
     /**
      * Delete method
      *
