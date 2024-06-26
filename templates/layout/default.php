@@ -31,16 +31,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
-    <script src="https://unpkg.com/htmx.org@2.0.0"></script>
-    <script type="text/javascript">
-    htmx.defineExtension('ajax-header', {
-      onEvent: function (name, evt) {
-        if (name === 'htmx:configRequest') {
-          evt.detail.headers['X-Csrf-Token'] = document.getElementById('csrf-token').getAttribute('content');
-        }
-      },
-    });
-    </script>
+    <?= $this->Html->script('app', ['type' => 'module']) ?>
     <?= $this->fetch('script') ?>
 </head>
 <body hx-ext="ajax-header">
