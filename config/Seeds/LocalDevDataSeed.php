@@ -4,7 +4,7 @@ declare(strict_types=1);
 use App\Model\Enum\MemberRoleEnum;
 use Authentication\PasswordHasher\DefaultPasswordHasher;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\Utility\Inflector;
+use Cake\Utility\Text;
 use Faker\Factory;
 use Migrations\AbstractSeed;
 
@@ -78,9 +78,11 @@ class LocalDevDataSeed extends AbstractSeed
         $createdTeams = [];
         $teams = $this->fetchTable('Teams');
         for ($i = 0; $i <= 3; $i++) {
+            $name = $faker->word();
             $team = $teams->newEntity([
                 'organization_id' => $org->id,
-                'name' => $faker->word(),
+                'name' => $name,
+                'slug' => Text::slug($name),
             ]);
             $index = rand(0, count($org->organization_members) - 1);
             $team->team_members = [
@@ -95,9 +97,10 @@ class LocalDevDataSeed extends AbstractSeed
         // Projects
         $projects = $this->fetchTable('Projects');
         for ($i = 0; $i <= 3; $i++) {
+            $name = $faker->word();
             $project = $projects->newEntity([
                 'organization_id' => $org->id,
-                'name' => $faker->word(),
+                'name' => Text::slug($name),
             ]);
             $index = rand(0, count($createdTeams) - 1);
             $project->teams = [
