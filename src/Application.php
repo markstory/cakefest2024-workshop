@@ -125,8 +125,12 @@ class Application extends BaseApplication implements
 
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
     {
+        // There are two possible login URLs. The default one is for HTML views.
+        // And the other is for the in-progress mobile app.
+        $loginUrl = '/users/login';
+
         $config = [
-            'unauthenticatedRedirect' => '/login',
+            'unauthenticatedRedirect' => $loginUrl,
         ];
         $service = new AuthenticationService($config);
 
@@ -151,9 +155,6 @@ class Application extends BaseApplication implements
                 AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
             ],
         ]);
-        // There are two possible login URLs. The default one is for HTML views.
-        // And the other is for the in-progress mobile app.
-        $loginUrl = '/login';
         $service->loadAuthenticator('Authentication.Form', [
             'loginUrl' => $loginUrl,
             'fields' => [
